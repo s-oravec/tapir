@@ -1,0 +1,207 @@
+CREATE OR REPLACE PACKAGE ut_tapir_column AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir column object';
+
+    PROCEDURE empty_constructor(d VARCHAR2 := 'empty constructor should work');
+
+    PROCEDURE get_type_decl_varchar2(d VARCHAR2 := 'type attribute declaration for varchar2 column should work');
+
+    PROCEDURE get_type_decl_varchar2_byte(d VARCHAR2 := 'type attribute declaration for varchar2 with byte length semantic column should work');
+
+    PROCEDURE get_type_decl_varchar2_char(d VARCHAR2 := 'type attribute declaration for varchar2 with char length semantic column should work');
+
+    PROCEDURE get_type_decl_integer(d VARCHAR2 := 'type attribute declaration for integer column should work');
+
+    PROCEDURE get_type_decl_number(d VARCHAR2 := 'type attribute declaration for number column should work');
+
+    PROCEDURE get_type_decl_number_precision(d VARCHAR2 := 'type attribute declaration for number column with precision should work');
+
+    PROCEDURE get_type_decl_number_pcscl(d VARCHAR2 := 'type attribute declaration for number column with precision and scale should work');
+
+    PROCEDURE get_type_decl_number_scale(d VARCHAR2 := 'type attribute declaration for umber column with scale should work');
+
+    PROCEDURE get_type_decl_date(d VARCHAR2 := 'type attribute declaration for date column should work');
+
+    PROCEDURE get_type_decl_timestamp(d VARCHAR2 := 'type attribute declaration for timestamp column should work');
+
+    PROCEDURE get_type_decl_regional_ts(d VARCHAR2 := 'type attribute declaration for timestamp column should work for regional date format set in session');
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
+
+    --------------------------------------------------------------------------------
+    PROCEDURE create_type_with_attr(a_attr_in IN VARCHAR2) IS
+    BEGIN
+        EXECUTE IMMEDIATE 'create or replace type ut_tapir_tmp as object (' ||
+                          a_attr_in || ');';
+    END;
+
+    --------------------------------------------------------------------------------  
+    PROCEDURE empty_constructor(d VARCHAR2) IS
+        c tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --assert
+        c := tapir_column();
+    END;
+
+    --------------------------------------------------------------------------------  
+    PROCEDURE get_type_decl_varchar2(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 10, char_length => 10, char_used =>'B')
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col varchar2(10)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_varchar2_byte(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 10, char_length => 10, char_used =>'B')
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col varchar2(10)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_varchar2_char(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 40, char_length => 10, char_used =>'C')
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col varchar2(10 char)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_integer(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => 0)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col number(38)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_number(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => NULL)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col number',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_number_precision(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => 9, data_scale => 0)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col number(9)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_number_pcscl(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => 9, data_scale => 2)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col number(9,2)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_number_scale(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => 2)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col number(38,2)',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_date(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'DATE', data_length => 7, data_precision => NULL, data_scale => NULL)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col date', a_actual_in => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_timestamp(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'TIMESTAMP(6)', data_length => 11, data_precision => NULL, data_scale => 6)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col timestamp',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_decl_regional_ts(d VARCHAR2) IS
+        l_attr_decl VARCHAR2(255);
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'TIMESTAMP(6)', data_length => 11, data_precision => NULL, data_scale => 6)
+                       .get_type_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col timestamp',
+                       a_actual_in   => l_attr_decl);
+        create_type_with_attr(a_attr_in => l_attr_decl);
+    END;
+
+END;
+/

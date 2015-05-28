@@ -1,0 +1,20 @@
+create or replace package ut_tapir as
+
+    description constant varchar2(255) := 'Tapir test';
+
+    procedure pass;
+
+end;
+/
+create or replace package body ut_tapir as
+
+    procedure pass is
+    begin
+        --log
+        pete_logger.log_method_description('tradaa!!!');
+        --assert
+        pete_assert.pass;
+    end;
+
+end;
+/
