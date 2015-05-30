@@ -6,9 +6,18 @@ CREATE OR REPLACE TYPE tapir_table AS OBJECT
 --tab_comments
     comments VARCHAR2(4000),
 --lists
-    table_columns     tapir_column_list, --ordered by column_id
-    table_constraints tapir_constraint_list,
-    table_indexes     tapir_index_list
+    column_list     tapir_column_list, --ordered by column_id
+    constraint_list tapir_constraint_list,
+    index_list      tapir_index_list,
+
+    CONSTRUCTOR FUNCTION tapir_table
+    (
+        owner           VARCHAR2 DEFAULT NULL,
+        NAME            VARCHAR2 DEFAULT NULL,
+        comments        VARCHAR2 DEFAULT NULL,
+        column_list     tapir_column_list DEFAULT NULL,
+        constraint_list tapir_constraint_list DEFAULT NULL,
+        index_list      tapir_index_list DEFAULT NULL
+    ) RETURN SELF AS RESULT
 )
 /
-

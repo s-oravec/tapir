@@ -215,7 +215,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Scalar argument name template
     --------------------------------------------------------------------------------
     --
-    g_SCALAR_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_{objectName}';
+    g_SCALAR_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_{columnName}';
 
     --
     -- Sets prefix for test packages
@@ -238,7 +238,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Record argument name template
     --------------------------------------------------------------------------------
     --
-    g_RECORD_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'arec_{objectName}';
+    g_RECORD_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_rec';
 
     --
     -- Sets prefix for test packages
@@ -261,7 +261,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Object argument name template
     --------------------------------------------------------------------------------
     --
-    g_OBJECT_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'aobj_{objectName}';
+    g_OBJECT_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_obj';
 
     --
     -- Sets prefix for test packages
@@ -283,7 +283,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Object table argument name template
     --------------------------------------------------------------------------------
     --
-    g_OBJECT_TABLE_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'acol_{objectName}';
+    g_OBJECT_TABLE_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_col';
 
     --
     -- Sets prefix for test packages
@@ -306,7 +306,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- PL/SQL table of records argument name template
     --------------------------------------------------------------------------------
     --
-    g_RECTABLE_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'atab_{objectName}';
+    g_RECORD_TABLE_ARG_TMPL_DFLT CONSTANT VARCHAR2(128) := 'a_tab';
 
     --
     -- Sets prefix for test packages
@@ -314,22 +314,22 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- %argument a_value_in
     -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
     --
-    PROCEDURE set_rectable_arg_tmpl
+    PROCEDURE set_record_table_arg_tmpl
     (
-        a_value_in       IN VARCHAR2 DEFAULT g_RECTABLE_ARG_TMPL_DFLT,
+        a_value_in       IN VARCHAR2 DEFAULT g_RECORD_TABLE_ARG_TMPL_DFLT,
         a_set_as_default IN BOOLEAN DEFAULT FALSE
     );
 
     --
     -- returns current settings of show_hook_methods system parameter
     --
-    FUNCTION get_rectable_arg_tmpl RETURN VARCHAR2;
+    FUNCTION get_record_table_arg_tmpl RETURN VARCHAR2;
 
     --
     -- Scalar local variable name template
     --------------------------------------------------------------------------------
     --
-    g_SCALAR_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_{objectName}';
+    g_SCALAR_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_{columnName}';
 
     --
     -- Sets prefix for test packages
@@ -352,7 +352,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Local record variable name template
     --------------------------------------------------------------------------------
     --
-    g_RECORD_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'lrec_{objectName}';
+    g_RECORD_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_rec';
 
     --
     -- Sets prefix for test packages
@@ -375,7 +375,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Local object variable name template
     --------------------------------------------------------------------------------
     --
-    g_OBJECT_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'lobj_{objectName}';
+    g_OBJECT_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_obj';
 
     --
     -- Sets prefix for test packages
@@ -398,7 +398,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Local object table name variable
     --------------------------------------------------------------------------------
     --
-    g_OBJECT_TABLE_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'lcol_{objectName}';
+    g_OBJECT_TABLE_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_col';
 
     --
     -- Sets prefix for test packages
@@ -421,7 +421,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Local table of record variable name template
     --------------------------------------------------------------------------------
     --
-    g_RECTABLE_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'ltab_{objectName}';
+    g_RECORD_TABLE_LOCAL_TMPL_DFLT CONSTANT VARCHAR2(128) := 'l_tab';
 
     --
     -- Sets prefix for test packages
@@ -429,16 +429,16 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- %argument a_value_in
     -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
     --
-    PROCEDURE set_rectable_local_tmpl
+    PROCEDURE set_record_table_local_tmpl
     (
-        a_value_in       IN VARCHAR2 DEFAULT g_RECTABLE_LOCAL_TMPL_DFLT,
+        a_value_in       IN VARCHAR2 DEFAULT g_RECORD_TABLE_LOCAL_TMPL_DFLT,
         a_set_as_default IN BOOLEAN DEFAULT FALSE
     );
 
     --
     -- returns current settings of show_hook_methods system parameter
     --
-    FUNCTION get_rectable_local_tmpl RETURN VARCHAR2;
+    FUNCTION get_record_table_local_tmpl RETURN VARCHAR2;
 
 END;
 /

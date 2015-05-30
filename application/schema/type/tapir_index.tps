@@ -1,11 +1,15 @@
-CREATE OR REPLACE TYPE tapir_index AS OBJECT
+CREATE OR REPLACE TYPE tapir_index UNDER tapir_table_subobject
 (
 --index
-    NAME       VARCHAR2(128),
     index_type VARCHAR2(27),
     uniqueness VARCHAR2(9),
---ind_columns
-    index_columns tapir_column_list --ordered by position
+
+    CONSTRUCTOR FUNCTION tapir_index
+    (
+        NAME        IN VARCHAR2 DEFAULT NULL,
+        index_type  IN VARCHAR2 DEFAULT NULL,
+        uniqueness  VARCHAR2 DEFAULT NULL,
+        column_list IN tapir_column_list DEFAULT NULL
+    ) RETURN SELF AS RESULT
 )
 /
-

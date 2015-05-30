@@ -33,10 +33,33 @@ CREATE OR REPLACE TYPE tapir_column AS OBJECT
         comments             IN VARCHAR2 DEFAULT NULL
     ) RETURN SELF AS RESULT,
 
-    --get column type declaration
+--get column declaration in SQL type
     MEMBER FUNCTION get_type_decl RETURN VARCHAR2,
 
-    --get function column argument declaration
-    MEMBER FUNCTION get_fnc_argument_decl RETURN VARCHAR2
+--get column argument in constructor of SQL type
+    MEMBER FUNCTION get_ctor_arg_decl RETURN VARCHAR2,
+
+-- selection expression for scalar column in argument
+-- <column_name> = <scalar_arg_prefix><column_name> and
+    MEMBER FUNCTION get_selection_arg RETURN VARCHAR2,
+
+-- selection expression list for columns of record argument
+-- <column_name> = <record_arg_prefix><object_name>.<column_name> and
+    MEMBER FUNCTION get_selection_record RETURN VARCHAR2,
+
+--
+-- selection expression list for columns of object argument
+-- <column_name> = <object_arg_prefix><object_name>.<column_name> and
+    MEMBER FUNCTION get_selection_object RETURN VARCHAR2,
+
+--
+-- selection expression list for columns of table of records argument
+-- <column_name> = <record_table_arg_prefix><object_name>(iterator).<column_name> and
+    MEMBER FUNCTION get_selection_rectab(a_iterator_name_in in varchar2) RETURN VARCHAR2,
+
+--
+-- selection expression list for columns of table of objects argument
+-- <column_name> = <object_table_arg_prefix><object_name>(iterator).<column_name> and
+    MEMBER FUNCTION get_selection_objtab(a_iterator_name_in in varchar2) RETURN VARCHAR2
 )
 /

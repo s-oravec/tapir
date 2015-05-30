@@ -24,20 +24,103 @@ CREATE OR REPLACE PACKAGE ut_tapir_column AS
 
     PROCEDURE get_type_decl_timestamp(d VARCHAR2 := 'type attribute declaration for timestamp column should work');
 
-    PROCEDURE get_type_decl_regional_ts(d VARCHAR2 := 'type attribute declaration for timestamp column should work for regional date format set in session');
+    PROCEDURE get_type_ctor_varchar2(d VARCHAR2 := 'type constructor argument declaration for varchar2 column should work');
 
+    PROCEDURE get_type_ctor_varchar2_byte(d VARCHAR2 := 'type constructor argument declaration for varchar2 with byte length semantic column should work');
+
+    PROCEDURE get_type_ctor_varchar2_char(d VARCHAR2 := 'type constructor argument declaration for varchar2 with char length semantic column should work');
+
+    PROCEDURE get_type_ctor_integer(d VARCHAR2 := 'type constructor argument declaration for integer column should work');
+
+    PROCEDURE get_type_ctor_number(d VARCHAR2 := 'type constructor argument declaration for number column should work');
+
+    PROCEDURE get_type_ctor_number_precision(d VARCHAR2 := 'type constructor argument declaration for number column with precision should work');
+
+    PROCEDURE get_type_ctor_number_pcscl(d VARCHAR2 := 'type constructor argument declaration for number column with precision and scale should work');
+
+    PROCEDURE get_type_ctor_number_scale(d VARCHAR2 := 'type constructor argument declaration for umber column with scale should work');
+
+    PROCEDURE get_type_ctor_date(d VARCHAR2 := 'type constructor argument declaration for date column should work');
+
+    PROCEDURE get_type_ctor_timestamp(d VARCHAR2 := 'type constructor argument declaration for timestamp column should work');
+
+    PROCEDURE get_selection_arg(d VARCHAR2 := 'get selection for scalar argument should work');
+
+    PROCEDURE get_selection_record(d VARCHAR2 := 'get selection for record argument should work');
+
+    PROCEDURE get_selection_object(d VARCHAR2 := 'get selection for object argument should work');
+
+    PROCEDURE get_selection_rectab(d VARCHAR2 := 'get selection for table of records argument should work');
+
+    PROCEDURE get_selection_objtab(d VARCHAR2 := 'get selection for table of objects argument should work');
 END;
 /
 CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
 
+    --create type with attribute
     --------------------------------------------------------------------------------
-    PROCEDURE create_type_with_attr(a_attr_in IN VARCHAR2) IS
+    PROCEDURE create_type_with_attr(a_attr_decl_in IN VARCHAR2) IS
+        l_status user_objects.status%TYPE;
+        l_sql    VARCHAR2(32767);
     BEGIN
-        EXECUTE IMMEDIATE 'create or replace type ut_tapir_tmp as object (' ||
-                          a_attr_in || ');';
+        l_sql := 'create or replace type ut_tapir_tmp as object (' ||
+                 a_attr_decl_in || ');';
+        BEGIN
+            EXECUTE IMMEDIATE l_sql;
+        EXCEPTION
+            WHEN OTHERS THEN
+                pete_assert.fail(a_comment_in => l_sql || chr(10) ||
+                                                 'Failure: ' ||
+                                                 dbms_utility.format_error_stack ||
+                                                 chr(10) ||
+                                                 dbms_utility.format_error_backtrace);
+        END;
+        SELECT status
+          INTO l_status
+          FROM USER_OBJECTS
+         WHERE OBJECT_NAME = 'UT_TAPIR_TMP';
+    
+        pete_assert.eq(a_expected_in => 'VALID',
+                       a_actual_in   => l_status,
+                       a_comment_in  => 'Created type is expected to be valid');
     END;
 
-    --------------------------------------------------------------------------------  
+    --create type with constructor
+    --------------------------------------------------------------------------------
+    PROCEDURE create_type_with_ctor
+    (
+        a_attr_decl_in      IN VARCHAR2,
+        a_attr_ctor_decl_in IN VARCHAR2
+    ) IS
+        l_status user_objects.status%TYPE;
+        l_sql    VARCHAR2(32767);
+    BEGIN
+        l_sql := 'create or replace type ut_tapir_tmp as object (' ||
+                 a_attr_decl_in || ',' || chr(10) || --
+                 '  constructor function ut_tapir_tmp(' || a_attr_ctor_decl_in ||
+                 ') return self as result' || chr(10) || ');';
+        BEGIN
+            EXECUTE IMMEDIATE l_sql;
+        EXCEPTION
+            WHEN OTHERS THEN
+                pete_assert.fail(a_comment_in => l_sql || chr(10) ||
+                                                 'Failure: ' ||
+                                                 dbms_utility.format_error_stack ||
+                                                 chr(10) ||
+                                                 dbms_utility.format_error_backtrace);
+        END;
+        --
+        SELECT status
+          INTO l_status
+          FROM USER_OBJECTS
+         WHERE OBJECT_NAME = 'UT_TAPIR_TMP';
+        --
+        pete_assert.eq(a_expected_in => 'VALID',
+                       a_actual_in   => l_status,
+                       a_comment_in  => 'Created type is expected to be valid');
+    END;
+
+    --------------------------------------------------------------------------------
     PROCEDURE empty_constructor(d VARCHAR2) IS
         c tapir_column;
     BEGIN
@@ -47,7 +130,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         c := tapir_column();
     END;
 
-    --------------------------------------------------------------------------------  
+    --------------------------------------------------------------------------------
     PROCEDURE get_type_decl_varchar2(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
@@ -59,7 +142,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col varchar2(10)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -74,7 +157,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col varchar2(10)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -89,7 +172,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col varchar2(10 char)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -103,7 +186,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col number(38)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -117,7 +200,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col number',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -131,7 +214,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col number(9)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -145,7 +228,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col number(9,2)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -159,7 +242,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col number(38,2)',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -172,7 +255,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                        .get_type_decl;
         --assert
         pete_assert.eq(a_expected_in => 'col date', a_actual_in => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
@@ -186,21 +269,329 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         --assert
         pete_assert.eq(a_expected_in => 'col timestamp',
                        a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        create_type_with_attr(a_attr_decl_in => l_attr_decl);
     END;
 
     --------------------------------------------------------------------------------
-    PROCEDURE get_type_decl_regional_ts(d VARCHAR2) IS
-        l_attr_decl VARCHAR2(255);
+    -- get_ctor_arg_decl --
+    --------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_varchar2(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name => 'COL',
+                                         data_type   => 'VARCHAR2',
+                                         data_length => 10,
+                                         char_length => 10,
+                                         char_used   => 'B');
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in varchar2 default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_varchar2_byte(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name => 'COL',
+                                         data_type   => 'VARCHAR2',
+                                         data_length => 10,
+                                         char_length => 10,
+                                         char_used   => 'B');
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in varchar2 default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_varchar2_char(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name => 'COL',
+                                         data_type   => 'VARCHAR2',
+                                         data_length => 40,
+                                         char_length => 10,
+                                         char_used   => 'C');
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_Column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in varchar2 default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_integer(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
     BEGIN
         pete_logger.log_method_description(d);
         --test
-        l_attr_decl := tapir_column(column_name =>'COL', data_type =>'TIMESTAMP(6)', data_length => 11, data_precision => NULL, data_scale => 6)
-                       .get_type_decl;
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'NUMBER',
+                                         data_length    => 22,
+                                         data_precision => NULL,
+                                         data_scale     => 0);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
         --assert
-        pete_assert.eq(a_expected_in => 'col timestamp',
-                       a_actual_in   => l_attr_decl);
-        create_type_with_attr(a_attr_in => l_attr_decl);
+        pete_assert.eq(a_expected_in => 'col in number default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_number(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'NUMBER',
+                                         data_length    => 22,
+                                         data_precision => NULL,
+                                         data_scale     => NULL);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in number default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_number_precision(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'NUMBER',
+                                         data_length    => 22,
+                                         data_precision => 9,
+                                         data_scale     => 0);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in number default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_number_pcscl(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'NUMBER',
+                                         data_length    => 22,
+                                         data_precision => 9,
+                                         data_scale     => 2);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in number default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_number_scale(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'NUMBER',
+                                         data_length    => 22,
+                                         data_precision => NULL,
+                                         data_scale     => 2);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in number default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_date(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'DATE',
+                                         data_length    => 7,
+                                         data_precision => NULL,
+                                         data_scale     => NULL);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in date default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_type_ctor_timestamp(d VARCHAR2) IS
+        l_attr_decl      VARCHAR2(255);
+        l_attr_ctor_decl VARCHAR2(255);
+        l_column         tapir_column;
+    BEGIN
+        pete_logger.log_method_description(d);
+        --test
+        l_column         := tapir_column(column_name    => 'COL',
+                                         data_type      => 'TIMESTAMP(6)',
+                                         data_length    => 11,
+                                         data_precision => NULL,
+                                         data_scale     => 6);
+        l_attr_decl      := l_column.get_type_decl;
+        l_attr_ctor_decl := l_column.get_ctor_arg_decl;
+        --assert
+        pete_assert.eq(a_expected_in => 'col in timestamp default null',
+                       a_actual_in   => l_attr_ctor_decl);
+        create_type_with_ctor(a_attr_decl_in      => l_attr_decl,
+                              a_attr_ctor_decl_in => l_attr_ctor_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_selection_arg(d VARCHAR2) IS
+        l_column tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column := tapir_column(column_name => 'COL',
+                                 data_type   => 'VARCHAR2',
+                                 data_length => 10,
+                                 char_length => 10,
+                                 char_used   => 'B');
+        pete_assert.eq(a_expected_in => 'col = ' || REPLACE(tapir_config.get_scalar_arg_tmpl,
+                                                            '{columnName}',
+                                                            'col') ||
+                                        tapir_config.get_in_arg_suffix,
+                       a_actual_in   => l_column.get_selection_arg);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_selection_record(d VARCHAR2) IS
+        l_column tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column := tapir_column(column_name => 'COL',
+                                 data_type   => 'VARCHAR2',
+                                 data_length => 10,
+                                 char_length => 10,
+                                 char_used   => 'B');
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_record_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_record);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_selection_object(d VARCHAR2) IS
+        l_column tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column := tapir_column(column_name => 'COL',
+                                 data_type   => 'VARCHAR2',
+                                 data_length => 10,
+                                 char_length => 10,
+                                 char_used   => 'B');
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_object_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_object);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_selection_rectab(d VARCHAR2) IS
+        l_column tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column := tapir_column(column_name => 'COL',
+                                 data_type   => 'VARCHAR2',
+                                 data_length => 10,
+                                 char_length => 10,
+                                 char_used   => 'B');
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_record_table_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '(tradaa).col',
+                       a_actual_in   => l_column.get_selection_rectab('tradaa'));
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_selection_objtab(d VARCHAR2) IS
+        l_column tapir_column;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        l_column := tapir_column(column_name => 'COL',
+                                 data_type   => 'VARCHAR2',
+                                 data_length => 10,
+                                 char_length => 10,
+                                 char_used   => 'B');
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_object_table_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '(tradaa).col',
+                       a_actual_in   => l_column.get_selection_objtab('tradaa'));
     END;
 
 END;
