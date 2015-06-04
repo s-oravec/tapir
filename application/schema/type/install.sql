@@ -9,11 +9,11 @@ prompt Creating type body TAPIR_COLUMN
 prompt Creating type TAPIR_COLUMN_LIST
 @@tapir_column_list.tps
 
-prompt Creating type TAPIR_TABLE_SUBOBJECT
-@@tapir_table_subobject.tps
+prompt Creating type TAPIR_OBJECT_WITH_COLUMNS
+@@tapir_object_with_columns.tps
 
-prompt Creating type body TAPIR_TABLE_SUBOBJECT
-@@tapir_table_subobject.tpb
+prompt Creating type body TAPIR_OBJECT_WITH_COLUMNS
+@@tapir_object_with_columns.tpb
 
 prompt Creating type TAPIR_CONSTRAINT
 @@tapir_constraint.tps

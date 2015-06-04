@@ -13,7 +13,7 @@ CREATE OR REPLACE TYPE BODY tapir_constraint AS
     BEGIN
         --
         self.NAME              := NAME;
-        self.subobject_type    := 'CONSTRAINT';
+        self.object_type       := 'CONSTRAINT';
         self.constraint_type   := constraint_type;
         self.r_owner           := r_owner;
         self.r_constraint_name := r_constraint_name;

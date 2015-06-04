@@ -6,8 +6,8 @@ drop type tapir_column force;
 prompt Dropping type TAPIR_COLUMN_LIST
 drop type tapir_column_list force;
 
-prompt Dropping type TAPIR_TABLE_SUBOBJECT
-drop type tapir_table_subobject force;
+prompt Dropping type TAPIR_OBJECT_WITH_COLUMNS
+drop type tapir_object_with_columns force;
 
 
 prompt Dropping type TAPIR_CONSTRAINT

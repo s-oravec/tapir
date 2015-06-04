@@ -1,7 +1,7 @@
-CREATE OR REPLACE TYPE tapir_table_subobject AS OBJECT
+CREATE OR REPLACE TYPE tapir_object_with_columns AS OBJECT
 (
-    NAME           VARCHAR2(128),
-    subobject_type VARCHAR2(128), -- constraint | index
+    name           VARCHAR2(128),
+    object_type    VARCHAR2(128), -- constraint | index | table
     column_list    tapir_column_list, --ordered by position
 
 --

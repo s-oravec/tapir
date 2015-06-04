@@ -14,6 +14,7 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
         --
         self.owner           := owner;
         self.name            := NAME;
+        self.object_type     := 'TABLE';
         self.comments        := comments;
         self.column_list     := column_list;
         self.constraint_list := constraint_list;

@@ -1,12 +1,10 @@
-CREATE OR REPLACE TYPE tapir_table AS OBJECT
+CREATE OR REPLACE TYPE tapir_table UNDER tapir_object_with_columns
 (
 --tables
     owner VARCHAR2(30),
-    NAME  VARCHAR2(128),
 --tab_comments
     comments VARCHAR2(4000),
 --lists
-    column_list     tapir_column_list, --ordered by column_id
     constraint_list tapir_constraint_list,
     index_list      tapir_index_list,
 

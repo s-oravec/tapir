@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE tapir_constraint UNDER tapir_table_subobject
+CREATE OR REPLACE TYPE tapir_constraint UNDER tapir_object_with_columns
 (
 --constraint
     constraint_type   VARCHAR2(1),

@@ -4,8 +4,8 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     OBJECT_TYPE_TMPL          VARCHAR2(128) := 'OBJECT_TYPE_TMPL';
     g_collection_type_tmpl    VARCHAR2(128);
     COLLECTION_TYPE_TMPL      VARCHAR2(128) := 'COLLECTION_TYPE_TMPL';
-    g_tapir_package_tmpl       VARCHAR2(128);
-    tapir_PACKAGE_TMPL         VARCHAR2(128) := 'tapir_PACKAGE_TMPL';
+    g_tapir_package_tmpl      VARCHAR2(128);
+    tapir_PACKAGE_TMPL        VARCHAR2(128) := 'tapir_PACKAGE_TMPL';
     g_surrogate_key_seq_tmpl  VARCHAR2(128);
     SURROGATE_KEY_SEQ_TMPL    VARCHAR2(128) := 'SURROGATE_KEY_SEQ_TMPL';
     g_history_table_tmpl      VARCHAR2(128);
@@ -26,8 +26,8 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     OBJECT_ARG_TMPL           VARCHAR2(128) := 'OBJECT_ARG_TMPL';
     g_object_table_arg_tmpl   VARCHAR2(128);
     OBJECT_TABLE_ARG_TMPL     VARCHAR2(128) := 'OBJECT_TABLE_ARG_TMPL';
-    g_record_table_arg_tmpl       VARCHAR2(128);
-    RECORD_TABLE_ARG_TMPL         VARCHAR2(128) := 'RECORD_TABLE_ARG_TMPL';
+    g_record_table_arg_tmpl   VARCHAR2(128);
+    RECORD_TABLE_ARG_TMPL     VARCHAR2(128) := 'RECORD_TABLE_ARG_TMPL';
     g_scalar_local_tmpl       VARCHAR2(128);
     SCALAR_LOCAL_TMPL         VARCHAR2(128) := 'SCALAR_LOCAL_TMPL';
     g_record_local_tmpl       VARCHAR2(128);
@@ -36,8 +36,8 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     OBJECT_LOCAL_TMPL         VARCHAR2(128) := 'OBJECT_LOCAL_TMPL';
     g_object_table_local_tmpl VARCHAR2(128);
     OBJECT_TABLE_LOCAL_TMPL   VARCHAR2(128) := 'OBJECT_TABLE_LOCAL_TMPL';
-    g_record_table_local_tmpl     VARCHAR2(128);
-    RECORD_TABLE_LOCAL_TMPL       VARCHAR2(128) := 'RECORD_TABLE_LOCAL_TMPL';
+    g_record_table_local_tmpl VARCHAR2(128);
+    RECORD_TABLE_LOCAL_TMPL   VARCHAR2(128) := 'RECORD_TABLE_LOCAL_TMPL';
 
     C_TRUE  VARCHAR2(10) := 'TRUE';
     C_FALSE VARCHAR2(10) := 'FALSE';
@@ -507,7 +507,7 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
                                                a_default_value_in => g_OBJECT_TYPE_TMPL_DFLT);
         g_collection_type_tmpl    := get_param(a_key_in           => COLLECTION_TYPE_TMPL,
                                                a_default_value_in => g_COLLECTION_TYPE_TMPL_DFLT);
-        g_tapir_package_tmpl       := get_param(a_key_in           => tapir_PACKAGE_TMPL,
+        g_tapir_package_tmpl      := get_param(a_key_in           => tapir_PACKAGE_TMPL,
                                                a_default_value_in => g_tapir_PACKAGE_TMPL_DFLT);
         g_surrogate_key_seq_tmpl  := get_param(a_key_in           => SURROGATE_KEY_SEQ_TMPL,
                                                a_default_value_in => g_SURROGATE_KEY_SEQ_TMPL_DFLT);
@@ -529,7 +529,7 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
                                                a_default_value_in => g_OBJECT_ARG_TMPL_DFLT);
         g_object_table_arg_tmpl   := get_param(a_key_in           => OBJECT_TABLE_ARG_TMPL,
                                                a_default_value_in => g_OBJECT_TABLE_ARG_TMPL_DFLT);
-        g_record_table_arg_tmpl       := get_param(a_key_in           => RECORD_TABLE_ARG_TMPL,
+        g_record_table_arg_tmpl   := get_param(a_key_in           => RECORD_TABLE_ARG_TMPL,
                                                a_default_value_in => g_RECORD_TABLE_ARG_TMPL_DFLT);
         g_scalar_local_tmpl       := get_param(a_key_in           => SCALAR_LOCAL_TMPL,
                                                a_default_value_in => g_SCALAR_LOCAL_TMPL_DFLT);
@@ -539,7 +539,7 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
                                                a_default_value_in => g_OBJECT_LOCAL_TMPL_DFLT);
         g_object_table_local_tmpl := get_param(a_key_in           => OBJECT_TABLE_LOCAL_TMPL,
                                                a_default_value_in => g_OBJECT_TABLE_LOCAL_TMPL_DFLT);
-        g_record_table_local_tmpl     := get_param(a_key_in           => RECORD_TABLE_LOCAL_TMPL,
+        g_record_table_local_tmpl := get_param(a_key_in           => RECORD_TABLE_LOCAL_TMPL,
                                                a_default_value_in => g_RECORD_TABLE_LOCAL_TMPL_DFLT);
     
     END init;

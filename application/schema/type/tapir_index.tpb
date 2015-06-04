@@ -11,7 +11,7 @@ CREATE OR REPLACE TYPE BODY tapir_index AS
     BEGIN
         --
         self.name           := NAME;
-        self.subobject_type := 'INDEX';
+        self.object_type    := 'INDEX';
         self.index_type     := index_type;
         self.uniqueness     := uniqueness;
         self.column_list    := column_list;

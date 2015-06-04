@@ -1,6 +1,6 @@
-create or replace package tapir as
+CREATE OR REPLACE PACKAGE tapir AS
 
 
 
-end tapir;
+END tapir;
 /
