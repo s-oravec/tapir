@@ -1,0 +1,123 @@
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_ins AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference';
+
+    PROCEDURE before_each;
+
+    PROCEDURE ins_rec_insert_works(d VARCHAR2 := 'ins of "full" record should work');
+    PROCEDURE ins_rec_gen_pkey_seq(d VARCHAR2 := 'ins should generate primary key from sequence if not specified and return it in out argument');
+
+    PROCEDURE after_each;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
+
+    g_rec px_tapir_reference.typ_rec;
+
+    --------------------------------------------------------------------------------
+    FUNCTION helper_get_count RETURN INTEGER IS
+        l_result INTEGER;
+    BEGIN
+        SELECT COUNT(*) INTO l_result FROM tapir_reference;
+        RETURN l_result;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE before_each IS
+    BEGIN
+        g_rec.id  := 1;
+        g_rec.id1 := 1;
+        g_rec.id2 := 2;
+        g_rec.id2 := 2;
+        g_rec.in1 := 1;
+        g_rec.v1  := 'tradaa';
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE after_each IS
+    BEGIN
+        ROLLBACK;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE ins_rec_insert_works(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prereq
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Table is empty');
+        --test
+        px_tapir_reference.ins(a_rec_in => g_rec);
+        --assert
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Record has been inserted');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE ins_rec_gen_pkey_seq(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prereq
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Table is empty');
+        --test
+        g_rec.id := NULL;
+        px_tapir_reference.ins(a_rec_in => g_rec);
+        --assert
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Record has been inserted');
+        pete_assert.eq(a_expected_in => sx_tapir_reference.currval,
+                       a_actual_in   => g_rec.id);
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    /*     
+    not implemented in reference and genrator
+    we do not encourage such a behaviour
+    
+    
+    PROCEDURE ins_rec_return_trg_changes(d VARCHAR2) IS
+        l_v1 tapir_reference.v1%TYPE;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prereq
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Table is empty');
+        --test
+        --create before insert trigger
+        -- NoFormat Start
+        EXECUTE IMMEDIATE
+          'CREATE OR REPLACE TRIGGER tapir_reference_test_bi' || chr(10) ||
+          '    BEFORE INSERT ON tapir_reference' || chr(10) ||
+          '    FOR EACH ROW' || chr(10) ||
+          'DECLARE' || chr(10) ||
+          'BEGIN' || chr(10) ||
+          '    :new.v1 := ''Hello Moon!'';' || chr(10) ||
+          'END;'
+        ;
+        -- NoFormat End
+        g_rec.v1 := 'Hello World!';
+        px_tapir_reference.ins(a_rec_in => g_rec);
+        --assert
+        SELECT v1 INTO l_v1 FROM tapir_reference;
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => helper_get_count,
+                       a_comment_in  => 'Record has been inserted');
+        pete_assert.eq(a_expected_in => l_v1, a_actual_in => g_rec.v1);
+        --
+    END;
+    */
+
+END;
+/

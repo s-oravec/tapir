@@ -18,10 +18,15 @@ delete
 
 commit;
 
+
+@&&run_script ../reference/uninstall.sql
+@&&run_script ../reference/install.sql
+
 @&&run_dir data
 @&&run_dir table
 @&&run_dir package
 @&&run_dir type
+@&&run_dir reference
 
 set serveroutput on size unlimited
 exec pete.run_test_suite;
