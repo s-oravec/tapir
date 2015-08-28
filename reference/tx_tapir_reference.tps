@@ -9,6 +9,7 @@ CREATE OR REPLACE TYPE tx_tapir_reference AS OBJECT
 
     CONSTRUCTOR FUNCTION tx_tapir_reference
     (
+        id  IN NUMBER DEFAULT NULL,
         id1 IN NUMBER DEFAULT NULL,
         id2 IN NUMBER DEFAULT NULL,
         in1 IN NUMBER DEFAULT NULL,

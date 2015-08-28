@@ -1,0 +1,202 @@
+CREATE OR REPLACE PACKAGE ut_oopx_tapir_ref_convert AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference - Convert methods';
+
+    PROCEDURE convert_rec_and_obj_works(d VARCHAR2 := 'convert record to object and back should work');
+    PROCEDURE convert_tab_and_col_works(d VARCHAR2 := 'convert table of records to collection of objects and back should work');
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_oopx_tapir_ref_convert AS
+
+    --------------------------------------------------------------------------------
+    FUNCTION helper_rec_equals
+    (
+        a IN px_tapir_reference.typ_rec,
+        b IN px_tapir_reference.typ_rec
+    ) RETURN BOOLEAN IS
+        l_result BOOLEAN := TRUE;
+    BEGIN
+        --
+        IF NOT (a.id = b.id OR (a.id IS NULL AND b.id IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.id1 = b.id1 OR (a.id1 IS NULL AND b.id1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.id2 = b.id2 OR (a.id2 IS NULL AND b.id2 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.in1 = b.in1 OR (a.in1 IS NULL AND b.in1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.v1 = b.v1 OR (a.v1 IS NULL AND b.v1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION helper_obj_equals
+    (
+        a IN tx_tapir_reference,
+        b IN tx_tapir_reference
+    ) RETURN BOOLEAN IS
+        l_result BOOLEAN := TRUE;
+    BEGIN
+        --
+        IF (a IS NOT NULL AND b IS NULL)
+           OR (a IS NULL AND b IS NOT NULL)
+        THEN
+            RETURN FALSE;
+        END IF;
+        --
+        IF NOT (a.id = b.id OR (a.id IS NULL AND b.id IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.id1 = b.id1 OR (a.id1 IS NULL AND b.id1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.id2 = b.id2 OR (a.id2 IS NULL AND b.id2 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.in1 = b.in1 OR (a.in1 IS NULL AND b.in1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        IF NOT (a.v1 = b.v1 OR (a.v1 IS NULL AND b.v1 IS NULL))
+        THEN
+            l_result := FALSE;
+        END IF;
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION helper_tab_equals
+    (
+        a IN px_tapir_reference.typ_tab,
+        b IN px_tapir_reference.typ_tab
+    ) RETURN BOOLEAN IS
+    BEGIN
+        IF (a IS NULL AND b IS NULL)
+        THEN
+            RETURN TRUE;
+        END IF;
+        IF (a IS NOT NULL AND b IS NULL)
+           OR (a IS NULL AND b IS NOT NULL)
+           OR (a.count != b.count)
+        THEN
+            RETURN FALSE;
+        END IF;
+        FOR i IN 1 .. a.count
+        LOOP
+            IF NOT helper_rec_equals(a(i), b(i))
+            THEN
+                RETURN FALSE;
+            END IF;
+        END LOOP;
+        RETURN TRUE;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION helper_col_equals
+    (
+        a IN cx_tapir_reference,
+        b IN cx_tapir_reference
+    ) RETURN BOOLEAN IS
+    BEGIN
+        IF (a IS NULL AND b IS NULL)
+        THEN
+            RETURN TRUE;
+        END IF;
+        IF (a IS NOT NULL AND b IS NULL)
+           OR (a IS NULL AND b IS NOT NULL)
+           OR (a.count != b.count)
+        THEN
+            RETURN FALSE;
+        END IF;
+        FOR i IN 1 .. a.count
+        LOOP
+            IF NOT helper_obj_equals(a(i), b(i))
+            THEN
+                RETURN FALSE;
+            END IF;
+        END LOOP;
+        RETURN TRUE;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE convert_rec_and_obj_works(d IN VARCHAR2) IS
+        lrec_a px_tapir_reference.typ_rec;
+        lrec_b px_tapir_reference.typ_rec;
+        lobj_x tx_tapir_reference;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --
+        lobj_x := px_tapir_reference.convert(a_rec_in => lrec_a);
+        lrec_b := px_tapir_reference.convert(a_obj_in => lobj_x);
+        --
+        pete_assert.this(a_value_in   => helper_rec_equals(lrec_a, lrec_b),
+                         a_comment_in => 'Empty rec > obj > rec are equal');
+        --
+        lrec_a.id := 1;
+        lobj_x    := px_tapir_reference.convert(a_rec_in => lrec_a);
+        lrec_b    := px_tapir_reference.convert(a_obj_in => lobj_x);
+        --
+        pete_assert.this(a_value_in   => helper_rec_equals(lrec_a, lrec_b),
+                         a_comment_in => 'Not empty rec > obj > rec are equal');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE convert_tab_and_col_works(d IN VARCHAR2) IS
+        ltab_a px_tapir_reference.typ_tab;
+        ltab_b px_tapir_reference.typ_tab;
+        lcol_x cx_tapir_reference;
+        lrec_a px_tapir_reference.typ_rec;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --
+        --Uninitialized
+        lcol_x := px_tapir_reference.convert(a_tab_in => ltab_a);
+        ltab_b := px_tapir_reference.convert(a_col_in => lcol_x);
+        --
+        pete_assert.this(a_value_in   => helper_tab_equals(ltab_a, ltab_b),
+                         a_comment_in => 'Uninitialized tab > col > tab are equal');
+        --Initialized empty
+        ltab_a := px_tapir_reference.typ_tab();
+        lcol_x := px_tapir_reference.convert(a_tab_in => ltab_a);
+        ltab_b := px_tapir_reference.convert(a_col_in => lcol_x);
+        --
+        pete_assert.this(a_value_in   => helper_tab_equals(ltab_a, ltab_b),
+                         a_comment_in => 'Initialized empty tab > col > tab are equal');
+        --
+        --Not empty
+        ltab_a.extend();
+        lrec_a.id := 1;
+        ltab_a(1) := lrec_a;
+        --
+        lcol_x := px_tapir_reference.convert(a_tab_in => ltab_a);
+        ltab_b := px_tapir_reference.convert(a_col_in => lcol_x);
+        --
+        pete_assert.this(a_value_in   => helper_tab_equals(ltab_a, ltab_b),
+                         a_comment_in => 'Not empty tab > col > tab are equal');
+        --
+    END;
+
+END;
+/
