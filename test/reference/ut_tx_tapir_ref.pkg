@@ -1,0 +1,51 @@
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_ins AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir Type Reference';
+
+    PROCEDURE empty_constructor_works(d VARCHAR2 := 'empty constructor works');
+    PROCEDURE partial_constructor_works(d VARCHAR2 := 'partially set constructor works');
+    PROCEDURE full_constructor_works(d VARCHAR2 := 'fully set constructor works');
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
+
+    --------------------------------------------------------------------------------
+    PROCEDURE empty_constructor_works(d VARCHAR2) IS
+        lobj tx_tapir_reference;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --test
+        EXECUTE IMMEDIATE 'select tx_tapir_reference() from dual'
+            INTO lobj;
+        --assert
+        pete_assert.this(a_value_in => lobj IS NOT NULL);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE partial_constructor_works(d VARCHAR2) IS
+        lobj tx_tapir_reference;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        EXECUTE IMMEDIATE 'select tx_tapir_reference(id => 1) from dual'
+            INTO lobj;
+        --assert
+        pete_assert.this(a_value_in => lobj IS NOT NULL);
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE full_constructor_works(d VARCHAR2) IS
+        lobj tx_tapir_reference;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        EXECUTE IMMEDIATE 'select tx_tapir_reference(id => 1, id1 => 1, id2 => 1, in1 => 1, v1 => ''test'') from dual'
+            INTO lobj;
+        --assert
+        pete_assert.this(a_value_in => lobj IS NOT NULL);
+    END;
+
+END;
+/

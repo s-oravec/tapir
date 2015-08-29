@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE ut_oopx_tapir_ref_ins AS
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_ins AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference - Insert methods';
 
@@ -15,7 +15,7 @@ CREATE OR REPLACE PACKAGE ut_oopx_tapir_ref_ins AS
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ut_oopx_tapir_ref_ins AS
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
 
     g_rec px_tapir_reference.typ_rec;
     g_obj tx_tapir_reference;

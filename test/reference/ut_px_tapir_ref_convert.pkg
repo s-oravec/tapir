@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE ut_oopx_tapir_ref_convert AS
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_convert AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference - Convert methods';
 
@@ -7,7 +7,7 @@ CREATE OR REPLACE PACKAGE ut_oopx_tapir_ref_convert AS
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ut_oopx_tapir_ref_convert AS
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_convert AS
 
     --------------------------------------------------------------------------------
     FUNCTION helper_rec_equals
