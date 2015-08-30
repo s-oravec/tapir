@@ -1,0 +1,135 @@
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_upd AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference - Update methods';
+
+    PROCEDURE before_each;
+
+    PROCEDURE upd_rec_update_works(d VARCHAR2 := 'upd of record should work');
+    PROCEDURE upd_obj_update_works(d VARCHAR2 := 'upd of object should work');
+    PROCEDURE upd_tab_update_works(d VARCHAR2 := 'upd of table of records should work');
+    PROCEDURE upd_col_update_works(d VARCHAR2 := 'upd of collection of objects should work');
+
+    --TODO: default udpate indicator value = update
+
+    PROCEDURE after_each;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
+
+    g_rec px_tapir_reference.typ_rec;
+    g_obj tx_tapir_reference;
+
+    g_tab px_tapir_reference.typ_tab := px_tapir_reference.typ_tab();
+    g_col cx_tapir_reference;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE before_each IS
+    BEGIN
+        g_rec.id1 := 1;
+        g_rec.in1 := 1;
+        g_rec.v1  := 'tradaa';
+        --
+        g_tab.delete;
+        g_tab.extend(2);
+        --
+        g_rec.id := 1;
+        g_rec.id2 := 1;
+        g_tab(1) := g_rec;
+        g_rec.id := 2;
+        g_rec.id2 := 2;
+        g_tab(2) := g_rec;
+        --
+        g_col := px_tapir_reference.convert(a_tab_in => g_tab);
+        g_obj := g_col(1);
+        --
+        px_tapir_reference.ins(a_tab_in => g_tab);
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE after_each IS
+    BEGIN
+        ROLLBACK;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE upd_rec_update_works(d VARCHAR2) IS
+        l_pkey px_tapir_reference.typ_pkey_rec;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        g_rec.v1 := 'Hello World!';
+        --test
+        px_tapir_reference.upd(a_rec_in => g_rec);
+        --assert
+        l_pkey.id := g_rec.id;
+        g_rec     := px_tapir_reference.getRecByPkey(a_pkey_in => l_pkey);
+        pete_assert.eq(a_expected_in => 'Hello World!',
+                       a_actual_in   => g_rec.v1);
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE upd_obj_update_works(d VARCHAR2) IS
+        l_pkey px_tapir_reference.typ_pkey_rec;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        g_obj.v1 := 'Hello World!';
+        --test
+        px_tapir_reference.upd(a_obj_in => g_obj);
+        --assert
+        l_pkey.id := g_obj.id;
+        g_obj     := px_tapir_reference.getObjByPkey(a_pkey_in => l_pkey);
+        pete_assert.eq(a_expected_in => 'Hello World!',
+                       a_actual_in   => g_obj.v1);
+        --
+    END;
+    --
+    --------------------------------------------------------------------------------
+    PROCEDURE upd_tab_update_works(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        g_tab(1).v1 := 'Hello World!';
+        g_tab(2).v1 := 'Hello Moon!';
+        --test
+        px_tapir_reference.upd(a_tab_in => g_tab);
+        --assert
+        SELECT * BULK COLLECT INTO g_tab FROM tapir_reference ORDER BY id;
+        pete_assert.eq(a_expected_in => 'Hello World!',
+                       a_actual_in   => g_tab(1).v1);
+        pete_assert.eq(a_expected_in => 'Hello Moon!',
+                       a_actual_in   => g_tab(2).v1);
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE upd_col_update_works(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        g_col(1).v1 := 'Hello World!';
+        g_col(2).v1 := 'Hello Moon!';
+        --test
+        px_tapir_reference.upd(a_col_in => g_col);
+        --assert
+        SELECT CAST(COLLECT(tx_tapir_reference(id, id1, id2, in1, v1)) AS
+                    cx_tapir_reference)
+          INTO g_col
+          FROM tapir_reference
+         ORDER BY id;
+        pete_assert.eq(a_expected_in => 'Hello World!',
+                       a_actual_in   => g_col(1).v1);
+        pete_assert.eq(a_expected_in => 'Hello Moon!',
+                       a_actual_in   => g_col(2).v1);
+        --
+    END;
+
+END;
+/

@@ -1,0 +1,154 @@
+CREATE OR REPLACE PACKAGE ut_px_tapir_ref_del AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir TAPI Package Reference - Delete methods';
+
+--    PROCEDURE before_each;
+--
+--    PROCEDURE ins_rec_insert_works(d VARCHAR2 := 'ins of "full" record should work');
+--    PROCEDURE ins_obj_insert_works(d VARCHAR2 := 'ins of "full" object should work');
+--    PROCEDURE ins_tab_insert_works(d VARCHAR2 := 'ins of table of records should work');
+--    PROCEDURE ins_col_insert_works(d VARCHAR2 := 'ins of collection of objects should work');
+--
+--    PROCEDURE after_each;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_del AS
+
+--    g_rec px_tapir_reference.typ_rec;
+--    g_obj tx_tapir_reference;
+--
+--    g_tab px_tapir_reference.typ_tab := px_tapir_reference.typ_tab();
+--    g_col cx_tapir_reference;
+--
+--    --------------------------------------------------------------------------------
+--    FUNCTION helper_get_count RETURN INTEGER IS
+--        l_result INTEGER;
+--    BEGIN
+--        SELECT COUNT(*) INTO l_result FROM tapir_reference;
+--        RETURN l_result;
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE before_each IS
+--    BEGIN
+--        g_rec.id1 := 1;
+--        g_rec.in1 := 1;
+--        g_rec.v1  := 'tradaa';
+--        --
+--        g_tab.delete;
+--        g_tab.extend(2);
+--        --
+--        g_rec.id := 1;
+--        g_rec.id2 := 1;
+--        g_tab(1) := g_rec;
+--        g_rec.id := 2;
+--        g_rec.id2 := 2;
+--        g_tab(2) := g_rec;
+--        --
+--        g_col := px_tapir_reference.convert(a_tab_in => g_tab);
+--        g_obj := g_col(1);
+--        --
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE after_each IS
+--    BEGIN
+--        ROLLBACK;
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE ins_rec_gen_pkey_seq(d VARCHAR2) IS
+--    BEGIN
+--        --log
+--        pete_logger.log_method_description(d);
+--        --prereq
+--        pete_assert.eq(a_expected_in => 0,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Table is empty');
+--        --test
+--        g_rec.id := NULL;
+--        px_tapir_reference.ins(a_rec_in => g_rec);
+--        --assert
+--        pete_assert.eq(a_expected_in => 1,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Record has been inserted');
+--        pete_assert.eq(a_expected_in => sx_tapir_reference.currval,
+--                       a_actual_in   => g_rec.id);
+--        --
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE ins_rec_insert_works(d VARCHAR2) IS
+--    BEGIN
+--        --log
+--        pete_logger.log_method_description(d);
+--        --prereq
+--        pete_assert.eq(a_expected_in => 0,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Table is empty');
+--        --test
+--        px_tapir_reference.ins(a_rec_in => g_rec);
+--        --assert
+--        pete_assert.eq(a_expected_in => 1,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Record has been inserted');
+--        --
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE ins_obj_insert_works(d VARCHAR2) IS
+--    BEGIN
+--        --log
+--        pete_logger.log_method_description(d);
+--        --prereq
+--        pete_assert.eq(a_expected_in => 0,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Table is empty');
+--        --test
+--        px_tapir_reference.ins(a_obj_in => g_obj);
+--        --assert
+--        pete_assert.eq(a_expected_in => 1,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Record has been inserted');
+--        --
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE ins_tab_insert_works(d VARCHAR2) IS
+--    BEGIN
+--        --log
+--        pete_logger.log_method_description(d);
+--        --prereq
+--        pete_assert.eq(a_expected_in => 0,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Table is empty');
+--        --test
+--        px_tapir_reference.ins(a_tab_in => g_tab);
+--        --assert
+--        pete_assert.eq(a_expected_in => 2,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Records have been inserted');
+--        --
+--    END;
+--
+--    --------------------------------------------------------------------------------
+--    PROCEDURE ins_col_insert_works(d VARCHAR2) IS
+--    BEGIN
+--        --log
+--        pete_logger.log_method_description(d);
+--        --prereq
+--        pete_assert.eq(a_expected_in => 0,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Table is empty');
+--        --test
+--        px_tapir_reference.ins(a_col_in => g_col);
+--        --assert
+--        pete_assert.eq(a_expected_in => 2,
+--                       a_actual_in   => helper_get_count,
+--                       a_comment_in  => 'Records have been inserted');
+--        --
+--    END;
+
+END;
+/

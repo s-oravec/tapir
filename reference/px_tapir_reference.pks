@@ -4,20 +4,26 @@ CREATE OR REPLACE PACKAGE px_tapir_reference AS
     --------------------------------------------------------------------------------
     SUBTYPE typ_rec IS tapir_reference%ROWTYPE;
     TYPE typ_tab IS TABLE OF typ_rec;
-    
+
     TYPE typ_pkey_rec IS RECORD(
         id tapir_reference.id%TYPE);
 
     SUBTYPE typ_boolean IS CHAR;
     gc_true  CONSTANT typ_boolean := 'Y';
     gc_false CONSTANT typ_boolean := 'N';
-    TYPE typ_rec_update IS RECORD(
-        id  typ_boolean,
-        id1 typ_boolean,
-        id2 typ_boolean,
-        in1 typ_boolean,
-        v1  typ_boolean);
-    TYPE typ_tab_update IS TABLE OF typ_rec_update;
+    TYPE typ_rec_upd_indicator IS RECORD(
+        id  typ_boolean := gc_false,
+        id1 typ_boolean := gc_false,
+        id2 typ_boolean := gc_false,
+        in1 typ_boolean := gc_false,
+        v1  typ_boolean := gc_false);
+    TYPE typ_tab_upd_indicator IS TABLE OF typ_rec_upd_indicator;
+
+    --get
+    --------------------------------------------------------------------------------
+    FUNCTION getRecByPKey(a_pkey_in IN typ_pkey_rec) RETURN typ_rec;
+
+    FUNCTION getObjByPKey(a_pkey_in IN typ_pkey_rec) RETURN tx_tapir_reference;
 
     --create
     --------------------------------------------------------------------------------
@@ -27,26 +33,27 @@ CREATE OR REPLACE PACKAGE px_tapir_reference AS
     PROCEDURE ins(a_col_in IN OUT NOCOPY cx_tapir_reference);
 
     --update
+    --by default updates all columns
     --------------------------------------------------------------------------------
     PROCEDURE upd
     (
-        a_rec_in        IN OUT typ_rec,
-        a_rec_update_in IN typ_rec_update DEFAULT NULL
+        a_rec_in               IN OUT typ_rec,
+        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
     );
     PROCEDURE upd
     (
-        a_obj_in        IN OUT tx_tapir_reference,
-        a_rec_update_in IN typ_rec_update DEFAULT NULL
+        a_obj_in               IN OUT tx_tapir_reference,
+        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
     );
     PROCEDURE upd
     (
-        a_tab_in        IN OUT NOCOPY typ_tab,
-        a_tab_update_in IN typ_tab_update DEFAULT NULL
+        a_tab_in               IN OUT NOCOPY typ_tab,
+        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
     );
     PROCEDURE upd
     (
-        a_col_in        IN OUT NOCOPY cx_tapir_reference,
-        a_tab_update_in IN typ_tab_update DEFAULT NULL
+        a_col_in               IN OUT NOCOPY cx_tapir_reference,
+        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
     );
 
     --delete
