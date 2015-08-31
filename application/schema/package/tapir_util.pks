@@ -16,7 +16,7 @@ CREATE OR REPLACE PACKAGE tapir_util AS
         RETURN tapir_table;
 
     --
-    -- Returns surrogate key create staments
+    -- Returns surrogate key create stament
     --
     -- %argument a_tapir_table_in table metadata object
     --
@@ -24,11 +24,43 @@ CREATE OR REPLACE PACKAGE tapir_util AS
         RETURN VARCHAR2;
 
     --
-    -- Returns surrogate key drop staments
+    -- Returns surrogate key drop stament
     --
     -- %argument a_tapir_table_in table metadata object
     --
     FUNCTION get_surrogate_key_seq_drop(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI 1:1 object type create statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_object_type_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI 1:1 object type drop statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_object_type_drop(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI collection type create statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_coll_type_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI collection type drop statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_coll_type_drop(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2;
 
 END;

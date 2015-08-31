@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE tapir_table UNDER tapir_object_with_columns
+CREATE OR REPLACE TYPE tapir_table FORCE UNDER tapir_object_with_columns
 (
 --tables
     owner VARCHAR2(30),
@@ -18,6 +18,15 @@ CREATE OR REPLACE TYPE tapir_table UNDER tapir_object_with_columns
         index_list      tapir_index_list DEFAULT NULL
     ) RETURN SELF AS RESULT,
 
-    MEMBER FUNCTION get_surrogate_key_seq_name RETURN VARCHAR2
+    MEMBER FUNCTION get_surrogate_key_seq_name RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_obj_type_name RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_coll_type_name RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_obj_type_attr_decl RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_obj_type_ctor_args_decl RETURN VARCHAR2
+
 )
 /

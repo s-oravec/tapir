@@ -1,3 +1,3 @@
-CREATE OR REPLACE TYPE tapir_column_list AS TABLE OF tapir_column
+CREATE OR REPLACE TYPE tapir_column_list FORCE AS TABLE OF tapir_column
 /
 

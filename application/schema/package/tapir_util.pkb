@@ -151,5 +151,62 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
                        a_tapir_table_in.get_surrogate_key_seq_name);
     END;
 
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_object_type_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'create or replace type #typeName# force' || chr(10) --
+           || '(' || chr(10) --
+           || '#typeAttrDeclList#' || chr(10) --
+           || '  CONSTRUCTOR FUNCTION #typeName#' || chr(10) --
+           || '  (' || chr(10) --
+           || '#typeCtorArgDeclList#' || chr(10) --
+           || '  ) RETURN SELF AS RESULT' || chr(10) --
+           || ');';
+    BEGIN
+        RETURN REPLACE(REPLACE(REPLACE(l_stmt_tmpl,
+                                       '#typeName#',
+                                       a_tapir_table_in.get_obj_type_name),
+                               '#typeAttrDeclList#',
+                               a_tapir_table_in.get_obj_type_attr_decl),
+                       '#typeCtorArgDeclList#',
+                       a_tapir_table_in.get_obj_type_ctor_args_decl);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_object_type_drop(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'drop type #typeName# force';
+    BEGIN
+        RETURN REPLACE(l_stmt_tmpl,
+                       '#typeName#',
+                       a_tapir_table_in.get_obj_type_name);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_coll_type_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'create or replace type #collTypeName# force is table of #objTypeName#;';
+    BEGIN
+        RETURN REPLACE(REPLACE(l_stmt_tmpl,
+                               '#collTypeName#',
+                               a_tapir_table_in.get_coll_type_name),
+                       '#objTypeName#',
+                       a_tapir_table_in.get_obj_type_name);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_coll_type_drop(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'drop type #collTypeName# force';
+    BEGIN
+        RETURN REPLACE(l_stmt_tmpl,
+                       '#collTypeName#',
+                       a_tapir_table_in.get_coll_type_name);
+    END;
+
 END;
 /

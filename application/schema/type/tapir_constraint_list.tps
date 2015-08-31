@@ -1,2 +1,2 @@
-CREATE OR REPLACE TYPE tapir_constraint_list AS TABLE OF tapir_constraint
+CREATE OR REPLACE TYPE tapir_constraint_list FORCE AS TABLE OF tapir_constraint
 /

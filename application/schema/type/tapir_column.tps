@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE tapir_column AS OBJECT
+CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
 (
 --tab_columns
     column_name          VARCHAR2(128),

@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE tapir_index UNDER tapir_object_with_columns
+CREATE OR REPLACE TYPE tapir_index FORCE UNDER tapir_object_with_columns
 (
 --index
     index_type VARCHAR2(27),

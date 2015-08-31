@@ -1,20 +1,25 @@
-create or replace package ut_tapir as
+CREATE OR REPLACE PACKAGE ut_tapir AS
 
-    description constant varchar2(255) := 'Tapir test';
+    description CONSTANT VARCHAR2(255) := 'Tapir test';
 
-    procedure pass;
+    PROCEDURE pass;
 
-end;
+    --TODO: create surrogate key sequence
+    --TODO: drop surrogate key sequence
+    --TODO: create object type
+    --TODO: drop object type
+
+END;
 /
-create or replace package body ut_tapir as
+CREATE OR REPLACE PACKAGE BODY ut_tapir AS
 
-    procedure pass is
-    begin
+    PROCEDURE pass IS
+    BEGIN
         --log
         pete_logger.log_method_description('tradaa!!!');
         --assert
         pete_assert.pass;
-    end;
+    END;
 
-end;
+END;
 /

@@ -32,5 +32,49 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
                              self.name));
     END;
 
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_obj_type_name RETURN VARCHAR2 IS
+    BEGIN
+        RETURN lower(REPLACE(tapir_config.get_object_type_tmpl,
+                             '{objectName}',
+                             self.name));
+    END;
+
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_coll_type_name RETURN VARCHAR2 IS
+    BEGIN
+        RETURN lower(REPLACE(tapir_config.get_collection_type_tmpl,
+                             '{objectName}',
+                             self.name));
+    END;
+
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_obj_type_attr_decl RETURN VARCHAR2 IS
+        l_result VARCHAR2(32767);
+    BEGIN
+        FOR i IN 1 .. self.column_list.count
+        LOOP
+            l_result := l_result || self.column_list(i).get_type_decl || ',' ||
+                        chr(10);
+        END LOOP;
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_obj_type_ctor_args_decl RETURN VARCHAR2 IS
+        l_result VARCHAR2(32767);
+    BEGIN
+        FOR i IN 1 .. self.column_list.count
+        LOOP
+            l_result := l_result || self.column_list(i).get_ctor_arg_decl || ',' ||
+                        chr(10);
+        END LOOP;
+        --
+        RETURN l_result;
+        --
+    END;
+
 END;
 /

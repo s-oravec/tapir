@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE tapir_object_with_columns AS OBJECT
+CREATE OR REPLACE TYPE tapir_object_with_columns FORCE AS OBJECT
 (
     name           VARCHAR2(128),
     object_type    VARCHAR2(128), -- constraint | index | table
