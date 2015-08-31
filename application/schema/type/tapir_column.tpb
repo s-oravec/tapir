@@ -97,6 +97,18 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
     END;
 
     --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_ctor_attr_asgn RETURN VARCHAR2 IS
+        l_result VARCHAR2(255);
+    BEGIN
+        --
+        l_result := lower('self.' || self.column_name || ' := ' ||
+                          self.column_name || ';');
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
     MEMBER FUNCTION get_selection_arg RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN

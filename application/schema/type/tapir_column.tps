@@ -39,6 +39,9 @@ CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
 --get column argument in constructor of SQL type
     MEMBER FUNCTION get_ctor_arg_decl RETURN VARCHAR2,
 
+--get attribute assignment in constructor of SQL type
+    MEMBER FUNCTION get_ctor_attr_asgn RETURN VARCHAR2,
+
 -- selection expression for scalar column in argument
 -- <column_name> = <scalar_arg_prefix><column_name> and
     MEMBER FUNCTION get_selection_arg RETURN VARCHAR2,
@@ -55,11 +58,13 @@ CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
 --
 -- selection expression list for columns of table of records argument
 -- <column_name> = <record_table_arg_prefix><object_name>(iterator).<column_name> and
-    MEMBER FUNCTION get_selection_rectab(a_iterator_name_in in varchar2) RETURN VARCHAR2,
+    MEMBER FUNCTION get_selection_rectab(a_iterator_name_in IN VARCHAR2)
+        RETURN VARCHAR2,
 
 --
 -- selection expression list for columns of table of objects argument
 -- <column_name> = <object_table_arg_prefix><object_name>(iterator).<column_name> and
-    MEMBER FUNCTION get_selection_objtab(a_iterator_name_in in varchar2) RETURN VARCHAR2
+    MEMBER FUNCTION get_selection_objtab(a_iterator_name_in IN VARCHAR2)
+        RETURN VARCHAR2
 )
 /

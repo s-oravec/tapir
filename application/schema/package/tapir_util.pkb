@@ -152,7 +152,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
     END;
 
     --------------------------------------------------------------------------------
-    FUNCTION get_tapi_object_type_create(a_tapir_table_in IN tapir_table)
+    FUNCTION get_tapi_obj_type_spc_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
         l_stmt_tmpl VARCHAR2(255) --
         := 'create or replace type #typeName# force' || chr(10) --
@@ -174,7 +174,35 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
     END;
 
     --------------------------------------------------------------------------------
-    FUNCTION get_tapi_object_type_drop(a_tapir_table_in IN tapir_table)
+    FUNCTION get_tapi_obj_type_bdy_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'create or replace type body #typeName# is' || chr(10) --
+           || chr(10) --
+           || '  CONSTRUCTOR FUNCTION #typeName#' || chr(10) --
+           || '  (' || chr(10) --
+           || '#typeCtorArgDeclList#' || chr(10) --
+           || '  ) RETURN SELF AS RESULT IS' || chr(10) --
+           || '  begin' || chr(10) --
+           || '  --' || chr(10) --
+           || '#typeCtorAttrAsgnList#' || chr(10) --
+           || '  --' || chr(10) --
+           || '  RETURN;' || chr(10) --
+           || '  --' || chr(10) --
+           || '  end;' || chr(10) --
+           || 'end;';
+    BEGIN
+        RETURN REPLACE(REPLACE(REPLACE(l_stmt_tmpl,
+                                       '#typeName#',
+                                       a_tapir_table_in.get_obj_type_name),
+                               '#typeAttrDeclList#',
+                               a_tapir_table_in.get_obj_type_attr_decl),
+                       '#typeCtorAttrAsgnList#',
+                       a_tapir_table_in.get_obj_type_ctor_attr_asgn);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_obj_type_drop(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
         l_stmt_tmpl VARCHAR2(255) --
         := 'drop type #typeName# force';

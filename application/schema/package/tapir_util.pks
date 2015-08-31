@@ -32,11 +32,19 @@ CREATE OR REPLACE PACKAGE tapir_util AS
         RETURN VARCHAR2;
 
     --
-    -- Returns TAPI 1:1 object type create statement
+    -- Returns TAPI 1:1 object type specification create statement
     --
     -- %argument a_tapir_table_in
     --
-    FUNCTION get_tapi_object_type_create(a_tapir_table_in IN tapir_table)
+    FUNCTION get_tapi_obj_type_spc_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI 1:1 object type body drop statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_obj_type_bdy_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2;
 
     --
@@ -44,7 +52,7 @@ CREATE OR REPLACE PACKAGE tapir_util AS
     --
     -- %argument a_tapir_table_in
     --
-    FUNCTION get_tapi_object_type_drop(a_tapir_table_in IN tapir_table)
+    FUNCTION get_tapi_obj_type_drop(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2;
 
     --

@@ -33,7 +33,8 @@ CREATE OR REPLACE PACKAGE BODY tapir IS
     --------------------------------------------------------------------------------
     PROCEDURE create_tapi_object_type_impl(a_tapir_table_in IN tapir_table) IS
     BEGIN
-        execute_statement(a_sql_in => tapir_util.get_tapi_object_type_create(a_tapir_table_in => a_tapir_table_in));
+        execute_statement(a_sql_in => tapir_util.get_tapi_obj_type_spc_create(a_tapir_table_in => a_tapir_table_in));
+        execute_statement(a_sql_in => tapir_util.get_tapi_obj_type_bdy_create(a_tapir_table_in => a_tapir_table_in));
     END;
 
     --------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ CREATE OR REPLACE PACKAGE BODY tapir IS
     --------------------------------------------------------------------------------
     PROCEDURE drop_tapi_object_type_impl(a_tapir_table_in IN tapir_table) IS
     BEGIN
-        execute_statement(a_sql_in => tapir_util.get_tapi_object_type_drop(a_tapir_table_in => a_tapir_table_in));
+        execute_statement(a_sql_in => tapir_util.get_tapi_obj_type_drop(a_tapir_table_in => a_tapir_table_in));
     END;
 
     --------------------------------------------------------------------------------

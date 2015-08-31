@@ -76,5 +76,19 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
         --
     END;
 
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_obj_type_ctor_attr_asgn RETURN VARCHAR2 IS
+        l_result VARCHAR2(32767);
+    BEGIN
+        FOR i IN 1 .. self.column_list.count
+        LOOP
+            l_result := l_result || self.column_list(i).get_ctor_attr_asgn ||
+                        chr(10);
+        END LOOP;
+        --
+        RETURN l_result;
+        --
+    END;
+
 END;
 /
