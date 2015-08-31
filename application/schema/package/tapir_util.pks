@@ -71,5 +71,22 @@ CREATE OR REPLACE PACKAGE tapir_util AS
     FUNCTION get_tapi_coll_type_drop(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2;
 
+    --
+    -- Returns TAPI package specification create statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_package_spc_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+    --
+    -- Returns TAPI package body drop statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_package_bdy_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2;
+
+
 END;
 /

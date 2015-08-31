@@ -1,24 +1,182 @@
-CREATE OR REPLACE PACKAGE ut_tapir AS
+CREATE OR REPLACE PACKAGE ut_ootapir AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir test';
 
-    PROCEDURE pass;
-
     --TODO: create surrogate key sequence
     --TODO: drop surrogate key sequence
-    --TODO: create object type
-    --TODO: drop object type
+    --TODO: create collection type
+    --TODO: drop collection type
+
+    PROCEDURE before_all;
+
+    PROCEDURE create_surrogate_key_seq(d VARCHAR2 := 'create surrogate key sequence should work');
+    PROCEDURE drop_surrogate_key_seq(d VARCHAR2 := 'drop surrogate key sequence should work');
+
+    PROCEDURE create_object_type(d VARCHAR2 := 'create object type should work');
+    PROCEDURE drop_object_type(d VARCHAR2 := 'drop object type should work');
+
+    PROCEDURE after_all;
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ut_tapir AS
+CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
 
-    PROCEDURE pass IS
+    g_table_name  VARCHAR2(30) := 'UT_TAPIR_TEST';
+    g_tapir_table tapir_table := tapir_util.get_tapir_table(a_table_name_in => g_table_name);
+
+    --------------------------------------------------------------------------------
+    PROCEDURE before_all IS
+        le_name_already_used EXCEPTION;
+        PRAGMA EXCEPTION_INIT(le_name_already_used, -955);
+        le_only_one_pkey EXCEPTION;
+        PRAGMA EXCEPTION_INIT(le_only_one_pkey, -2260);
+    BEGIN
+        BEGIN
+            EXECUTE IMMEDIATE 'create table ' || g_table_name ||
+                              ' as select 1 id, dummy from dual';
+        EXCEPTION
+            WHEN le_name_already_used THEN
+                NULL;
+        END;
+        BEGIN
+            EXECUTE IMMEDIATE 'alter table ' || g_table_name ||
+                              ' add constraint ' || g_table_name ||
+                              '_PK primary key (id)';
+        EXCEPTION
+            WHEN le_only_one_pkey THEN
+                NULL;
+        END;
+    
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE create_surrogate_key_seq(d VARCHAR2) IS
+        l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description('tradaa!!!');
+        pete_logger.log_method_description(d);
+        --prepare
+        BEGIN
+            EXECUTE IMMEDIATE 'drop sequence ' ||
+                              g_tapir_table.get_surrogate_key_seq_name();
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --test
+        tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         --assert
-        pete_assert.pass;
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_sequences
+         WHERE sequence_name =
+               upper(g_tapir_table.get_surrogate_key_seq_name());
+        --
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'sequence ' ||
+                                        g_tapir_table.get_surrogate_key_seq_name() ||
+                                        ' should have been created');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE drop_surrogate_key_seq(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        BEGIN
+            EXECUTE IMMEDIATE 'drop sequence ' ||
+                              g_tapir_table.get_surrogate_key_seq_name();
+            EXECUTE IMMEDIATE 'create sequence ' ||
+                              g_tapir_table.get_surrogate_key_seq_name();
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --test
+        tapir.drop_surrogate_key_seq(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_sequences
+         WHERE sequence_name =
+               upper(g_tapir_table.get_surrogate_key_seq_name());
+        --
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'sequence ' ||
+                                        g_tapir_table.get_surrogate_key_seq_name() ||
+                                        ' should have been dropped');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE create_object_type(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        BEGIN
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name() ||
+                              ' force';
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --test
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_types
+         WHERE type_name = upper(g_tapir_table.get_obj_type_name());
+        --
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'object type ' ||
+                                        g_tapir_table.get_obj_type_name() ||
+                                        ' should have been created');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE drop_object_type(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        BEGIN
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name() ||
+                              ' force';
+            tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --test
+        tapir.drop_tapi_object_type(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_types
+         WHERE type_name = upper(g_tapir_table.get_obj_type_name());
+        --
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'object type ' ||
+                                        g_tapir_table.get_obj_type_name() ||
+                                        ' should have been dropped');
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE after_all IS
+    BEGIN
+        EXECUTE IMMEDIATE 'drop table ' || g_table_name || ' purge';
     END;
 
 END;

@@ -68,8 +68,11 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
     BEGIN
         FOR i IN 1 .. self.column_list.count
         LOOP
-            l_result := l_result || self.column_list(i).get_ctor_arg_decl || ',' ||
-                        chr(10);
+            if i != self.column_list.count then
+            l_result := l_result || self.column_list(i).get_ctor_arg_decl || ',' || chr(10);
+            else
+            l_result := l_result || self.column_list(i).get_ctor_arg_decl || chr(10);
+            end if;
         END LOOP;
         --
         RETURN l_result;

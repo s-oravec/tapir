@@ -5,6 +5,12 @@ CREATE OR REPLACE PACKAGE ut_tapir_table AS
     PROCEDURE before_all;
 
     PROCEDURE get_surrogate_key_seq_name(d VARCHAR2 := 'get surrogate key sequence name should work');
+    PROCEDURE get_obj_type_name(d VARCHAR2 := 'get object type name should work');
+    PROCEDURE get_coll_type_name(d VARCHAR2 := 'get collection type name whould work');
+
+    --skipped get_obj_type_attr_decl
+    --skipped get_obj_type_ctor_args_decl
+    --skipped get_obj_type_ctor_attr_asgn
 
 END;
 /
@@ -26,6 +32,26 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_table AS
         --assert
         pete_assert.eq(a_expected_in => 'sx_tapir_reference',
                        a_actual_in   => g_tapir_table.get_surrogate_key_seq_name());
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_obj_type_name(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --assert
+        pete_assert.eq(a_expected_in => 'tx_tapir_reference',
+                       a_actual_in   => g_tapir_table.get_obj_type_name());
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_coll_type_name(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --assert
+        pete_assert.eq(a_expected_in => 'cx_tapir_reference',
+                       a_actual_in   => g_tapir_table.get_coll_type_name());
     END;
 
 END;

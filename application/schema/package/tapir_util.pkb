@@ -155,7 +155,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
     FUNCTION get_tapi_obj_type_spc_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
         l_stmt_tmpl VARCHAR2(255) --
-        := 'create or replace type #typeName# force' || chr(10) --
+        := 'create or replace type #typeName# force as object' || chr(10) --
            || '(' || chr(10) --
            || '#typeAttrDeclList#' || chr(10) --
            || '  CONSTRUCTOR FUNCTION #typeName#' || chr(10) --
@@ -195,8 +195,8 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
         RETURN REPLACE(REPLACE(REPLACE(l_stmt_tmpl,
                                        '#typeName#',
                                        a_tapir_table_in.get_obj_type_name),
-                               '#typeAttrDeclList#',
-                               a_tapir_table_in.get_obj_type_attr_decl),
+                               '#typeCtorArgDeclList#',
+                               a_tapir_table_in.get_obj_type_ctor_args_decl),
                        '#typeCtorAttrAsgnList#',
                        a_tapir_table_in.get_obj_type_ctor_attr_asgn);
     END;
@@ -234,6 +234,24 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
         RETURN REPLACE(l_stmt_tmpl,
                        '#collTypeName#',
                        a_tapir_table_in.get_coll_type_name);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_package_spc_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := '';
+    BEGIN
+        RETURN '';
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_package_bdy_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := '';
+    BEGIN
+        RETURN '';
     END;
 
 END;
