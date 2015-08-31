@@ -7,10 +7,10 @@ prompt Dropping TAPI package
 drop package px_tapir_reference;
 
 prompt Dropping TAPI collection type
-drop type cx_tapir_reference;
+drop type cx_tapir_reference force;
 
 prompt Dropping TAPI type
-drop type tx_tapir_reference;
+drop type tx_tapir_reference force;
 
 prompt Dropping surrogate key sequence
 drop sequence sx_tapir_reference;

@@ -129,5 +129,27 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
         --
     END;
 
+    --------------------------------------------------------------------------------
+    FUNCTION get_surrogate_key_seq_create(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'create sequence #sequenceName#';
+    BEGIN
+        RETURN REPLACE(l_stmt_tmpl,
+                       '#sequenceName#',
+                       a_tapir_table_in.get_surrogate_key_seq_name);
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_surrogate_key_seq_drop(a_tapir_table_in IN tapir_table)
+        RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'drop sequence #sequenceName#';
+    BEGIN
+        RETURN REPLACE(l_stmt_tmpl,
+                       '#sequenceName#',
+                       a_tapir_table_in.get_surrogate_key_seq_name);
+    END;
+
 END;
 /

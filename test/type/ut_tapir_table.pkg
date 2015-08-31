@@ -1,0 +1,32 @@
+CREATE OR REPLACE PACKAGE ut_tapir_table AS
+
+    description CONSTANT VARCHAR2(255) := 'Tapir table object';
+
+    PROCEDURE before_all;
+
+    PROCEDURE get_surrogate_key_seq_name(d VARCHAR2 := 'get surrogate key sequence name should work');
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ut_tapir_table AS
+
+    g_tapir_table tapir_table;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE before_all IS
+    BEGIN
+        g_tapir_table := tapir_util.get_tapir_table(a_table_name_in => 'TAPIR_REFERENCE');
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE get_surrogate_key_seq_name(d VARCHAR2) IS
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --assert
+        pete_assert.eq(a_expected_in => 'sx_tapir_reference',
+                       a_actual_in   => g_tapir_table.get_surrogate_key_seq_name());
+    END;
+
+END;
+/
