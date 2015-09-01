@@ -11,13 +11,13 @@ CREATE OR REPLACE PACKAGE px_tapir_reference AS
     SUBTYPE typ_boolean IS CHAR;
     gc_true  CONSTANT typ_boolean := 'Y';
     gc_false CONSTANT typ_boolean := 'N';
-    TYPE typ_rec_upd_indicator IS RECORD(
+    TYPE typ_upd_indicator_rec IS RECORD(
         id  typ_boolean := gc_false,
         id1 typ_boolean := gc_false,
         id2 typ_boolean := gc_false,
         in1 typ_boolean := gc_false,
         v1  typ_boolean := gc_false);
-    TYPE typ_tab_upd_indicator IS TABLE OF typ_rec_upd_indicator;
+    TYPE typ_upd_indicator_tab IS TABLE OF typ_upd_indicator_rec;
 
     --get
     --------------------------------------------------------------------------------
@@ -38,22 +38,22 @@ CREATE OR REPLACE PACKAGE px_tapir_reference AS
     PROCEDURE upd
     (
         a_rec_in               IN OUT typ_rec,
-        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
+        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL
     );
     PROCEDURE upd
     (
         a_obj_in               IN OUT tx_tapir_reference,
-        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
+        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL
     );
     PROCEDURE upd
     (
         a_tab_in               IN OUT NOCOPY typ_tab,
-        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
+        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL
     );
     PROCEDURE upd
     (
         a_col_in               IN OUT NOCOPY cx_tapir_reference,
-        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
+        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL
     );
 
     --delete

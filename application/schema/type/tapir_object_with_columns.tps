@@ -1,8 +1,13 @@
 CREATE OR REPLACE TYPE tapir_object_with_columns FORCE AS OBJECT
 (
-    name           VARCHAR2(128),
-    object_type    VARCHAR2(128), -- constraint | index | table
-    column_list    tapir_column_list, --ordered by position
+    NAME        VARCHAR2(128),
+    object_type VARCHAR2(128), -- constraint | index | table
+    column_list tapir_column_list, --ordered by position
+
+--
+--record type declaration column list
+--<column_name> <table_name>.<column_name>%type
+    MEMBER FUNCTION get_record_type_decl_col_list RETURN VARCHAR2,
 
 --
 -- selection expression list for scalar columns in arguments

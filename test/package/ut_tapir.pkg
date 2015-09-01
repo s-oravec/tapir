@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE ut_ootapir AS
+CREATE OR REPLACE PACKAGE ut_tapir AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir test';
 
@@ -19,7 +19,7 @@ CREATE OR REPLACE PACKAGE ut_ootapir AS
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
+CREATE OR REPLACE PACKAGE BODY ut_tapir AS
 
     g_table_name  VARCHAR2(30) := 'UT_TAPIR_TEST';
     g_tapir_table tapir_table := tapir_util.get_tapir_table(a_table_name_in => g_table_name);
@@ -75,7 +75,7 @@ CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => l_count,
                        a_comment_in  => 'sequence ' ||
-                                        g_tapir_table.get_surrogate_key_seq_name() ||
+                                        g_tapir_table.get_surrogate_key_seq_name ||
                                         ' should have been created');
         --
     END;
@@ -108,7 +108,7 @@ CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => l_count,
                        a_comment_in  => 'sequence ' ||
-                                        g_tapir_table.get_surrogate_key_seq_name() ||
+                                        g_tapir_table.get_surrogate_key_seq_name ||
                                         ' should have been dropped');
         --
     END;
@@ -138,7 +138,7 @@ CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => l_count,
                        a_comment_in  => 'object type ' ||
-                                        g_tapir_table.get_obj_type_name() ||
+                                        g_tapir_table.get_obj_type_name ||
                                         ' should have been created');
         --
     END;
@@ -169,7 +169,7 @@ CREATE OR REPLACE PACKAGE BODY ut_ootapir AS
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => l_count,
                        a_comment_in  => 'object type ' ||
-                                        g_tapir_table.get_obj_type_name() ||
+                                        g_tapir_table.get_obj_type_name ||
                                         ' should have been dropped');
     END;
 

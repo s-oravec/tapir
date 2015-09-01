@@ -1,6 +1,6 @@
 CREATE OR REPLACE TYPE BODY tapir_column AS
 
-    --------------------------------------------------------------------------------  
+    --------------------------------------------------------------------------------
     CONSTRUCTOR FUNCTION tapir_column
     (
         column_name          IN VARCHAR2 DEFAULT NULL,
@@ -37,13 +37,30 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
         --
     END;
 
-    --------------------------------------------------------------------------------  
-    MEMBER FUNCTION get_type_decl RETURN VARCHAR2 IS
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_type RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
-        l_result := lower(self.column_name || ' ' || CASE
+        --
+        l_result := lower(CASE
+                              WHEN self.data_type IN ('TIMESTAMP(6)') THEN
+                               'TIMESTAMP'
+                              ELSE
+                               self.data_type
+                          END);
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_type_length RETURN VARCHAR2 IS
+        l_result VARCHAR2(255);
+    BEGIN
+        --
+        l_result := lower(CASE
                               WHEN self.data_type IN ('NUMBER', 'INTEGER') THEN
-                               self.data_type || CASE
+                               CASE
                                    WHEN self.data_precision IS NOT NULL THEN
                                     '(' || self.data_precision || CASE
                                         WHEN self.data_scale IS NOT NULL
@@ -66,15 +83,23 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
                                END
                               WHEN self.data_Type IN
                                    ('VARCHAR2', 'RAW', 'CHAR', 'VARCHAR') THEN
-                               self.data_type || '(' || self.char_length || CASE char_used
+                               '(' || self.char_length || CASE char_used
                                    WHEN 'C' THEN
                                     ' CHAR'
                                END || ')'
-                              WHEN self.data_type IN ('TIMESTAMP(6)') THEN
-                               'TIMESTAMP'
-                              ELSE
-                               self.data_type
                           END);
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------  
+    MEMBER FUNCTION get_type_decl RETURN VARCHAR2 IS
+        l_result VARCHAR2(255);
+    BEGIN
+        --
+        l_result := lower(self.column_name || ' ' || get_type ||
+                          get_type_length);
         --
         RETURN l_result;
         --
@@ -85,12 +110,8 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
         l_result VARCHAR2(255);
     BEGIN
         --
-        l_result := lower(self.column_name || ' in ' || CASE self.data_type
-                              WHEN 'TIMESTAMP(6)' THEN
-                               'TIMESTAMP'
-                              ELSE
-                               self.data_type
-                          END || ' default null');
+        l_result := lower(self.column_name || ' in ' || get_type ||
+                          ' default null');
         --
         RETURN l_result;
         --

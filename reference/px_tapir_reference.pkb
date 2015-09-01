@@ -110,7 +110,7 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     PROCEDURE upd
     (
         a_rec_in               IN OUT typ_rec,
-        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
+        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL
     ) IS
     BEGIN
         UPDATE tapir_reference
@@ -137,7 +137,7 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     PROCEDURE upd
     (
         a_obj_in               IN OUT tx_tapir_reference,
-        a_rec_upd_indicator_in IN typ_rec_upd_indicator DEFAULT NULL
+        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL
     ) IS
     BEGIN
         UPDATE tapir_reference
@@ -164,7 +164,7 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     PROCEDURE upd
     (
         a_tab_in               IN OUT NOCOPY typ_tab,
-        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
+        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL
     ) IS
     BEGIN
         IF a_tab_upd_indicator_in IS NOT NULL
@@ -215,7 +215,7 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     PROCEDURE upd
     (
         a_col_in               IN OUT NOCOPY cx_tapir_reference,
-        a_tab_upd_indicator_in IN typ_tab_upd_indicator DEFAULT NULL
+        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL
     ) IS
     BEGIN
         IF a_tab_upd_indicator_in IS NOT NULL

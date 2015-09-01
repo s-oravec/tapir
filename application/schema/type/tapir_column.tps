@@ -16,6 +16,10 @@ CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
 --col_comments
     comments VARCHAR2(4000),
 
+    MEMBER FUNCTION get_type RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_type_length RETURN VARCHAR2,
+
     CONSTRUCTOR FUNCTION tapir_column
     (
         column_name          IN VARCHAR2 DEFAULT NULL,
