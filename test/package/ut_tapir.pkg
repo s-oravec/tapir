@@ -58,7 +58,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         --prepare
         BEGIN
             EXECUTE IMMEDIATE 'drop sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name();
+                              g_tapir_table.get_surrogate_key_seq_name;
         EXCEPTION
             WHEN OTHERS THEN
                 NULL;
@@ -70,7 +70,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
           INTO l_count
           FROM user_sequences
          WHERE sequence_name =
-               upper(g_tapir_table.get_surrogate_key_seq_name());
+               upper(g_tapir_table.get_surrogate_key_seq_name);
         --
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => l_count,
@@ -89,9 +89,9 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         --prepare
         BEGIN
             EXECUTE IMMEDIATE 'drop sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name();
+                              g_tapir_table.get_surrogate_key_seq_name;
             EXECUTE IMMEDIATE 'create sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name();
+                              g_tapir_table.get_surrogate_key_seq_name;
         EXCEPTION
             WHEN OTHERS THEN
                 NULL;
@@ -103,7 +103,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
           INTO l_count
           FROM user_sequences
          WHERE sequence_name =
-               upper(g_tapir_table.get_surrogate_key_seq_name());
+               upper(g_tapir_table.get_surrogate_key_seq_name);
         --
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => l_count,
@@ -121,7 +121,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         pete_logger.log_method_description(d);
         --prepare
         BEGIN
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name() ||
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
                               ' force';
         EXCEPTION
             WHEN OTHERS THEN
@@ -133,7 +133,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         SELECT COUNT(1)
           INTO l_count
           FROM user_types
-         WHERE type_name = upper(g_tapir_table.get_obj_type_name());
+         WHERE type_name = upper(g_tapir_table.get_obj_type_name);
         --
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => l_count,
@@ -151,7 +151,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         pete_logger.log_method_description(d);
         --prepare
         BEGIN
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name() ||
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
                               ' force';
             tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         EXCEPTION
@@ -164,7 +164,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         SELECT COUNT(1)
           INTO l_count
           FROM user_types
-         WHERE type_name = upper(g_tapir_table.get_obj_type_name());
+         WHERE type_name = upper(g_tapir_table.get_obj_type_name);
         --
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => l_count,
