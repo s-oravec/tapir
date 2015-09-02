@@ -18,6 +18,8 @@ CREATE OR REPLACE TYPE tapir_table FORCE UNDER tapir_object_with_columns
         index_list      tapir_index_list DEFAULT NULL
     ) RETURN SELF AS RESULT,
 
+    MEMBER FUNCTION get_tapir_package_name RETURN VARCHAR2,
+
     MEMBER FUNCTION get_surrogate_key_seq_name RETURN VARCHAR2,
 
     MEMBER FUNCTION get_obj_type_name RETURN VARCHAR2,

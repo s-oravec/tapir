@@ -4,6 +4,12 @@ CREATE OR REPLACE TYPE tapir_object_with_columns FORCE AS OBJECT
     object_type VARCHAR2(128), -- constraint | index | table
     column_list tapir_column_list, --ordered by position
 
+
+--
+--get update indicator record type declaration column list
+--<column_name> typ_boolean := gc_false
+    MEMBER FUNCTION get_updind_rectp_decl_col_list RETURN VARCHAR2,
+
 --
 --record type declaration column list
 --<column_name> <table_name>.<column_name>%type

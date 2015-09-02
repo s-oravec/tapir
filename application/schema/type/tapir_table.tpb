@@ -25,6 +25,14 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
     END;
 
     --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_tapir_package_name RETURN VARCHAR2 IS
+    BEGIN
+        RETURN lower(REPLACE(tapir_config.get_tapir_package_tmpl,
+                             '{objectName}',
+                             self.name));
+    END;
+
+    --------------------------------------------------------------------------------
     MEMBER FUNCTION get_surrogate_key_seq_name RETURN VARCHAR2 IS
     BEGIN
         RETURN lower(REPLACE(tapir_config.get_surrogate_key_seq_tmpl,

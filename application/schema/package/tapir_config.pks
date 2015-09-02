@@ -146,7 +146,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Input argument suffix
     --------------------------------------------------------------------------------
     --
-    g_IN_ARG_SUFFIX_DFLT CONSTANT VARCHAR2(128) := '_i';
+    g_IN_ARG_SUFFIX_DFLT CONSTANT VARCHAR2(128) := '_in';
 
     --
     -- Sets prefix for test packages
@@ -169,7 +169,7 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     -- Output argument sufix
     --------------------------------------------------------------------------------
     --
-    g_OUT_ARG_SUFFIX_DFLT CONSTANT VARCHAR2(128) := '_o';
+    g_OUT_ARG_SUFFIX_DFLT CONSTANT VARCHAR2(128) := '_out';
 
     --
     -- Sets prefix for test packages
