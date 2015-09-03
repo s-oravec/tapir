@@ -2,8 +2,6 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir test';
 
-    --TODO: create surrogate key sequence
-    --TODO: drop surrogate key sequence
     --TODO: create collection type
     --TODO: drop collection type
 
@@ -22,7 +20,7 @@ END;
 CREATE OR REPLACE PACKAGE BODY ut_tapir AS
 
     g_table_name  VARCHAR2(30) := 'UT_TAPIR_TEST';
-    g_tapir_table tapir_table := tapir_util.get_tapir_table(a_table_name_in => g_table_name);
+    g_tapir_table tapir_table;
 
     --------------------------------------------------------------------------------
     PROCEDURE before_all IS
@@ -31,6 +29,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         le_only_one_pkey EXCEPTION;
         PRAGMA EXCEPTION_INIT(le_only_one_pkey, -2260);
     BEGIN
+        --
         BEGIN
             EXECUTE IMMEDIATE 'create table ' || g_table_name ||
                               ' as select 1 id, dummy from dual';
@@ -38,6 +37,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
             WHEN le_name_already_used THEN
                 NULL;
         END;
+        --
         BEGIN
             EXECUTE IMMEDIATE 'alter table ' || g_table_name ||
                               ' add constraint ' || g_table_name ||
@@ -46,7 +46,9 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
             WHEN le_only_one_pkey THEN
                 NULL;
         END;
-    
+        --
+        g_tapir_table := tapir_util.get_tapir_table(a_table_name_in => g_table_name);
+        --
     END;
 
     --------------------------------------------------------------------------------

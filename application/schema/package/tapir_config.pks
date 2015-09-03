@@ -440,5 +440,120 @@ CREATE OR REPLACE PACKAGE TAPIR_CONFIG AS
     --
     FUNCTION get_record_table_local_tmpl RETURN VARCHAR2;
 
+    --
+    -- <table_name>%rowtype alias name template
+    --------------------------------------------------------------------------------
+    --
+    g_ROWTYPE_TP_ALIAS_TMPL_DFLT CONSTANT VARCHAR2(128) := 'typ_rec';
+
+    --
+    -- Sets prefix for test packages
+    --
+    -- %argument a_value_in
+    -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
+    --
+    PROCEDURE set_rowtype_tp_alias_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_ROWTYPE_TP_ALIAS_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    );
+
+    --
+    -- returns current settings of show_hook_methods system parameter
+    --
+    FUNCTION get_rowtype_tp_alias_tmpl RETURN VARCHAR2;
+
+    --
+    -- PLSQL table of <table_name>%rowtype name template
+    --------------------------------------------------------------------------------
+    --
+    g_ROWTYPETAB_TP_TMPL_DFLT CONSTANT VARCHAR2(128) := 'typ_tab';
+
+    --
+    -- Sets prefix for test packages
+    --
+    -- %argument a_value_in
+    -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
+    --
+    PROCEDURE set_rowtypetab_tp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_ROWTYPETAB_TP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    );
+
+    --
+    -- returns current settings of show_hook_methods system parameter
+    --
+    FUNCTION get_rowtypetab_tp_tmpl RETURN VARCHAR2;
+
+    --
+    -- primary key record type name template
+    --------------------------------------------------------------------------------
+    --
+    g_PKEY_REC_TYPE_TMPL_DFLT CONSTANT VARCHAR2(128) := 'typ_pkey_rec';
+
+    --
+    -- Sets prefix for test packages
+    --
+    -- %argument a_value_in
+    -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
+    --
+    PROCEDURE set_pkey_rec_type_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_PKEY_REC_TYPE_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    );
+
+    --
+    -- returns current settings of show_hook_methods system parameter
+    --
+    FUNCTION get_pkey_rec_type_tmpl RETURN VARCHAR2;
+
+    --
+    -- update indicator record type name template
+    --------------------------------------------------------------------------------
+    --
+    g_UPD_IND_RECTP_TMPL_DFLT CONSTANT VARCHAR2(128) := 'typ_upd_indicator_rec';
+
+    --
+    -- Sets prefix for test packages
+    --
+    -- %argument a_value_in
+    -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
+    --
+    PROCEDURE set_upd_ind_rectp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_UPD_IND_RECTP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    );
+
+    --
+    -- returns current settings of show_hook_methods system parameter
+    --
+    FUNCTION get_upd_ind_rectp_tmpl RETURN VARCHAR2;
+
+    --
+    -- PLSQL table of update indicator record type name template
+    --------------------------------------------------------------------------------
+    --
+    g_UPD_IND_TAB_RECTP_TMPL_DFLT CONSTANT VARCHAR2(128) := 'typ_upd_indicator_tab';
+
+    --
+    -- Sets prefix for test packages
+    --
+    -- %argument a_value_in
+    -- %argument a_set_as_default if true then the a_value_in is stored in config table TAPIR_CONFIG and becomes sesssion default
+    --
+    PROCEDURE set_upd_ind_tab_rectp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_UPD_IND_TAB_RECTP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    );
+
+    --
+    -- returns current settings of show_hook_methods system parameter
+    --
+    FUNCTION get_upd_ind_tab_rectp_tmpl RETURN VARCHAR2;
+
 END;
 /

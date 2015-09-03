@@ -38,6 +38,16 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     OBJECT_TABLE_LOCAL_TMPL   VARCHAR2(128) := 'OBJECT_TABLE_LOCAL_TMPL';
     g_record_table_local_tmpl VARCHAR2(128);
     RECORD_TABLE_LOCAL_TMPL   VARCHAR2(128) := 'RECORD_TABLE_LOCAL_TMPL';
+    g_rowtype_tp_alias_tmpl   VARCHAR2(128);
+    ROWTYPE_TP_ALIAS_TMPL     VARCHAR2(128) := 'ROWTYPE_TP_ALIAS_TMPL';
+    g_rowtypetab_tp_tmpl      VARCHAR2(128);
+    ROWTYPETAB_TP_TMPL        VARCHAR2(128) := 'ROWTYPETAB_TP_TMPL';
+    g_pkey_rec_type_tmpl      VARCHAR2(128);
+    PKEY_REC_TYPE_TMPL        VARCHAR2(128) := 'PKEY_REC_TYPE_TMPL';
+    g_upd_ind_rectp_tmpl      VARCHAR2(128);
+    UPD_IND_RECTP_TMPL        VARCHAR2(128) := 'UPD_IND_RECTP_TMPL';
+    g_upd_ind_tab_rectp_tmpl  VARCHAR2(128);
+    UPD_IND_TAB_RECTP_TMPL    VARCHAR2(128) := 'UPD_IND_TAB_RECTP_TMPL';
 
     C_TRUE  VARCHAR2(10) := 'TRUE';
     C_FALSE VARCHAR2(10) := 'FALSE';
@@ -501,6 +511,106 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     END;
 
     --------------------------------------------------------------------------------
+    PROCEDURE set_rowtype_tp_alias_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_ROWTYPE_TP_ALIAS_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    ) IS
+    BEGIN
+        g_rowtype_tp_alias_tmpl := a_value_in;
+        IF a_set_as_default
+        THEN
+            set_param(ROWTYPE_TP_ALIAS_TMPL, a_value_in);
+        END IF;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_rowtype_tp_alias_tmpl RETURN VARCHAR2 IS
+    BEGIN
+        RETURN g_rowtype_tp_alias_tmpl;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE set_rowtypetab_tp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_ROWTYPETAB_TP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    ) IS
+    BEGIN
+        g_rowtypetab_tp_tmpl := a_value_in;
+        IF a_set_as_default
+        THEN
+            set_param(ROWTYPETAB_TP_TMPL, a_value_in);
+        END IF;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_rowtypetab_tp_tmpl RETURN VARCHAR2 IS
+    BEGIN
+        RETURN g_rowtypetab_tp_tmpl;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE set_pkey_rec_type_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_PKEY_REC_TYPE_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    ) IS
+    BEGIN
+        g_pkey_rec_type_tmpl := a_value_in;
+        IF a_set_as_default
+        THEN
+            set_param(PKEY_REC_TYPE_TMPL, a_value_in);
+        END IF;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_pkey_rec_type_tmpl RETURN VARCHAR2 IS
+    BEGIN
+        RETURN g_pkey_rec_type_tmpl;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE set_upd_ind_rectp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_UPD_IND_RECTP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    ) IS
+    BEGIN
+        g_upd_ind_rectp_tmpl := a_value_in;
+        IF a_set_as_default
+        THEN
+            set_param(UPD_IND_RECTP_TMPL, a_value_in);
+        END IF;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_upd_ind_rectp_tmpl RETURN VARCHAR2 IS
+    BEGIN
+        RETURN g_upd_ind_rectp_tmpl;
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE set_upd_ind_tab_rectp_tmpl
+    (
+        a_value_in       IN VARCHAR2 DEFAULT g_UPD_IND_TAB_RECTP_TMPL_DFLT,
+        a_set_as_default IN BOOLEAN DEFAULT FALSE
+    ) IS
+    BEGIN
+        g_upd_ind_tab_rectp_tmpl := a_value_in;
+        IF a_set_as_default
+        THEN
+            set_param(UPD_IND_TAB_RECTP_TMPL, a_value_in);
+        END IF;
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_upd_ind_tab_rectp_tmpl RETURN VARCHAR2 IS
+    BEGIN
+        RETURN g_upd_ind_tab_rectp_tmpl;
+    END;
+
+    --------------------------------------------------------------------------------
     PROCEDURE init IS
     BEGIN
         g_object_type_tmpl        := get_param(a_key_in           => OBJECT_TYPE_TMPL,
@@ -541,7 +651,16 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
                                                a_default_value_in => g_OBJECT_TABLE_LOCAL_TMPL_DFLT);
         g_record_table_local_tmpl := get_param(a_key_in           => RECORD_TABLE_LOCAL_TMPL,
                                                a_default_value_in => g_RECORD_TABLE_LOCAL_TMPL_DFLT);
-    
+        g_rowtype_tp_alias_tmpl   := get_param(a_key_in           => ROWTYPE_TP_ALIAS_TMPL,
+                                               a_default_value_in => g_ROWTYPE_TP_ALIAS_TMPL_DFLT);
+        g_rowtypetab_tp_tmpl      := get_param(a_key_in           => ROWTYPETAB_TP_TMPL,
+                                               a_default_value_in => g_ROWTYPETAB_TP_TMPL_DFLT);
+        g_pkey_rec_type_tmpl      := get_param(a_key_in           => PKEY_REC_TYPE_TMPL,
+                                               a_default_value_in => g_PKEY_REC_TYPE_TMPL_DFLT);
+        g_upd_ind_rectp_tmpl      := get_param(a_key_in           => UPD_IND_RECTP_TMPL,
+                                               a_default_value_in => g_UPD_IND_RECTP_TMPL_DFLT);
+        g_upd_ind_tab_rectp_tmpl  := get_param(a_key_in           => UPD_IND_TAB_RECTP_TMPL,
+                                               a_default_value_in => g_UPD_IND_TAB_RECTP_TMPL_DFLT);
     END init;
 
 BEGIN

@@ -239,112 +239,78 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
     --------------------------------------------------------------------------------
     FUNCTION get_tapi_package_spc_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
+        -- NoFormat Start
         l_stmt_tmpl VARCHAR2(32767) --
-        := 'CREATE OR REPLACE PACKAGE #tapirPackageName# AS' || chr(10) --
-           || '' || chr(10) --
-           || '    --types' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           || '    SUBTYPE typ_rec IS #tableName#%ROWTYPE;' || chr(10) --
-           || '    TYPE typ_tab IS TABLE OF typ_rec;' || chr(10) --
-           || '' || chr(10) --
-           || '    TYPE typ_pkey_rec IS RECORD(' || chr(10) --
+        := 'CREATE OR REPLACE PACKAGE #tapirPackageName# AS' || chr(10)
+           || '' || chr(10)
+           || '    --types' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    SUBTYPE #typRec# IS #tableName#%ROWTYPE;' || chr(10)
+           || '    TYPE #typTab# IS TABLE OF #typRec#;' || chr(10)
+           || '' || chr(10)
+           || '    TYPE #typPkeyRec# IS RECORD(' || chr(10)
            || '        id #tableName#.id%TYPE);' || chr(10) --fixme: get real primary key columns using a_tapir_table_in
-           || '' || chr(10) --
-           || '    SUBTYPE typ_boolean IS CHAR;' || chr(10) --
-           || '    gc_true  CONSTANT typ_boolean := ''Y'';' || chr(10) --
-           || '    gc_false CONSTANT typ_boolean := ''N'';' || chr(10) --
-           || '' || chr(10) --
-           || '    TYPE typ_upd_indicator_rec IS RECORD(' || chr(10) --
-           || '         #updIndRecordTypeDeclarationColumnList#);' || chr(10) --
-           ||
-           '    TYPE typ_upd_indicator_tab IS TABLE OF typ_upd_indicator_rec;' ||
-           chr(10) --
-           || '' || chr(10) --
-           || '    --get' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           ||
-           '    FUNCTION getRecByPKey(a_pkey_in IN typ_pkey_rec) RETURN typ_rec;' ||
-           chr(10) --
-           || '' || chr(10) --
-           ||
-           '    FUNCTION getObjByPKey(a_pkey_in IN typ_pkey_rec) RETURN #objTypeName#;' ||
-           chr(10) --
-           || '' || chr(10) --
-           || '    --create' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           || '    PROCEDURE ins(#aRecIO# IN OUT typ_rec);' || chr(10) --
-           || '    PROCEDURE ins(#aObjIO# IN OUT #objTypeName#);' || chr(10) --
-           || '    PROCEDURE ins(#aTabIO# IN OUT NOCOPY typ_tab);' || chr(10) --
-           || '    PROCEDURE ins(#aColIO# IN OUT NOCOPY #collTypeName#);' ||
-           chr(10) --
-           || '' || chr(10) --
-           || '    --update' || chr(10) --
-           || '    --by default updates all columns' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           || '    PROCEDURE upd' || chr(10) --
-           || '    (' || chr(10) --
-           || '        #aRecIO#               IN OUT typ_rec,' || chr(10) --
-           ||
-           '        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL' ||
-           chr(10) --
-           || '    );' || chr(10) --
-           || '    PROCEDURE upd' || chr(10) --
-           || '    (' || chr(10) --
-           || '        #aObjIO#               IN OUT #objTypeName#,' || chr(10) --
-           ||
-           '        a_rec_upd_indicator_in IN typ_upd_indicator_rec DEFAULT NULL' ||
-           chr(10) --
-           || '    );' || chr(10) --
-           || '    PROCEDURE upd' || chr(10) --
-           || '    (' || chr(10) --
-           || '        #aTabIO#               IN OUT NOCOPY typ_tab,' ||
-           chr(10) --
-           ||
-           '        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL' ||
-           chr(10) --
-           || '    );' || chr(10) --
-           || '    PROCEDURE upd' || chr(10) --
-           || '    (' || chr(10) --
-           || '        #aColIO#               IN OUT NOCOPY #collTypeName#,' ||
-           chr(10) --
-           ||
-           '        a_tab_upd_indicator_in IN typ_upd_indicator_tab DEFAULT NULL' ||
-           chr(10) --
-           || '    );' || chr(10) --
-           || '' || chr(10) --
-           || '    --delete' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           || '    PROCEDURE del(#aRecIn# IN typ_rec);' || chr(10) --
-           || '    PROCEDURE del(#aObjIn# IN #objTypeName#);' || chr(10) --
-           || '    PROCEDURE del(#aTabIn# IN typ_tab);' || chr(10) --
-           || '    PROCEDURE del(#aColIn# IN #collTypeName#);' || chr(10) --
-           || '' || chr(10) --
-           || '    --convert functions' || chr(10) --
-           ||
-           '    --------------------------------------------------------------------------------' ||
-           chr(10) --
-           || '    FUNCTION convert(#aRecIn# IN typ_rec) RETURN #objTypeName#;' ||
-           chr(10) --
-           || '    FUNCTION convert(#aObjIn# IN #objTypeName#) RETURN typ_rec;' ||
-           chr(10) --
-           ||
-           '    FUNCTION convert(#aTabIn# IN typ_tab) RETURN #collTypeName#;' ||
-           chr(10) --
-           ||
-           '    FUNCTION convert(#aColIn# IN #collTypeName#) RETURN typ_tab;' ||
-           chr(10) --
-           || '' || chr(10) --
+           || '' || chr(10)
+           || '    SUBTYPE typ_boolean IS CHAR;' || chr(10)
+           || '    gc_true  CONSTANT typ_boolean := ''Y'';' || chr(10)
+           || '    gc_false CONSTANT typ_boolean := ''N'';' || chr(10)
+           || '' || chr(10)
+           || '    TYPE #typUpdIndRec# IS RECORD(' || chr(10)
+           || '         #updIndRecordTypeDeclarationColumnList#);' || chr(10)
+           || '    TYPE #typUpdIndTab# IS TABLE OF #typUpdIndRec#;' || chr(10)
+           || '' || chr(10)
+           || '    --get' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    FUNCTION getRecByPKey(a_pkey_in IN #typPkeyRec#) RETURN #typRec#;' || chr(10)
+           || '    FUNCTION getObjByPKey(a_pkey_in IN #typPkeyRec#) RETURN #objTypeName#;' || chr(10)
+           || '' || chr(10)
+           || '    --create' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE ins(#aRecIO# IN OUT #typRec#);' || chr(10)
+           || '    PROCEDURE ins(#aObjIO# IN OUT #objTypeName#);' || chr(10)
+           || '    PROCEDURE ins(#aTabIO# IN OUT NOCOPY #typTab#);' || chr(10)
+           || '    PROCEDURE ins(#aColIO# IN OUT NOCOPY #collTypeName#);' || chr(10)
+           || '' || chr(10)
+           || '    --update' || chr(10)
+           || '    --by default updates all columns' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aRecIO#               IN OUT #typRec#,' || chr(10)
+           || '        a_rec_upd_indicator_in IN #typUpdIndRec# DEFAULT NULL' || chr(10)
+           || '    );' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aObjIO#               IN OUT #objTypeName#,' || chr(10)
+           || '        a_rec_upd_indicator_in IN #typUpdIndRec# DEFAULT NULL' || chr(10)
+           || '    );' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aTabIO#               IN OUT NOCOPY #typTab#,' || chr(10)
+           || '        a_tab_upd_indicator_in IN #typUpdIndTab# DEFAULT NULL' || chr(10)
+           || '    );' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aColIO#               IN OUT NOCOPY #collTypeName#,' || chr(10)
+           || '        a_tab_upd_indicator_in IN #typUpdIndTab# DEFAULT NULL' || chr(10)
+           || '    );' || chr(10)
+           || '' || chr(10)
+           || '    --delete' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE del(#aRecIn# IN #typRec#);' || chr(10)
+           || '    PROCEDURE del(#aObjIn# IN #objTypeName#);' || chr(10)
+           || '    PROCEDURE del(#aTabIn# IN #typTab#);' || chr(10)
+           || '    PROCEDURE del(#aColIn# IN #collTypeName#);' || chr(10)
+           || '' || chr(10)
+           || '    --convert functions' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    FUNCTION convert(#aRecIn# IN #typRec#) RETURN #objTypeName#;' || chr(10)
+           || '    FUNCTION convert(#aObjIn# IN #objTypeName#) RETURN #typRec#;' || chr(10)
+           || '    FUNCTION convert(#aTabIn# IN #typTab#) RETURN #collTypeName#;' || chr(10)
+           || '    FUNCTION convert(#aColIn# IN #collTypeName#) RETURN #typTab#;' || chr(10)
+           || '' || chr(10)
            || 'END;';
+           -- NoFormat End
            --
            l_result varchar2(32767);
            --
@@ -385,6 +351,18 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
                                             tapir_config.get_record_table_arg_tmpl || tapir_config.get_inout_arg_suffix),
                                         '#aColIO#',
                                         tapir_config.get_object_table_arg_tmpl || tapir_config.get_inout_arg_suffix);
+        --types
+        l_result := replace(replace(replace(replace(replace(l_result,
+                                                            '#typUpdIndTab#',
+                                                            tapir_config.get_upd_ind_tab_rectp_tmpl),
+                                                        '#typUpdIndRec#',
+                                                        tapir_config.get_upd_ind_rectp_tmpl),
+                                                    '#typPkeyRec#',
+                                                    tapir_config.get_pkey_rec_type_tmpl),
+                                                '#typTab#',
+                                                tapir_config.get_rowtypetab_tp_tmpl),
+                                            '#typRec#',
+                                            tapir_config.get_rowtype_tp_alias_tmpl);
         --
         return l_result;
         --
