@@ -128,6 +128,8 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         pete_logger.log_method_description(d);
         --assert
         c := tapir_column();
+        pete_assert.this(a_value_in   => c IS NOT NULL,
+                         a_comment_in => 'Constructor should create object');
     END;
 
     --------------------------------------------------------------------------------
@@ -513,9 +515,13 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                                  char_used   => 'B');
         pete_assert.eq(a_expected_in => 'col = ' || REPLACE(tapir_config.get_scalar_arg_tmpl,
                                                             '{columnName}',
+                                                            'col'),
+                       a_actual_in   => l_column.get_selection_arg);
+        pete_assert.eq(a_expected_in => 'col = ' || REPLACE(tapir_config.get_scalar_arg_tmpl,
+                                                            '{columnName}',
                                                             'col') ||
                                         tapir_config.get_in_arg_suffix,
-                       a_actual_in   => l_column.get_selection_arg);
+                       a_actual_in   => l_column.get_selection_arg(a_arg_inout_suffix_in => tapir_config.get_in_arg_suffix));
     END;
 
     --------------------------------------------------------------------------------
@@ -532,9 +538,20 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                                  char_used   => 'B');
         pete_assert.eq(a_expected_in => 'col = ' ||
                                         tapir_config.get_record_arg_tmpl ||
-                                        tapir_config.get_in_arg_suffix ||
                                         '.col',
                        a_actual_in   => l_column.get_selection_record);
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_record_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_record(a_arg_inout_suffix_in => tapir_config.get_in_arg_suffix));
+        pete_assert.eq(a_expected_in => 'col = x.col',
+                       a_actual_in   => l_column.get_selection_record(a_arg_name_base_override_in => 'x'));
+        pete_assert.eq(a_expected_in => 'col = x' ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_record(a_arg_inout_suffix_in       => tapir_config.get_in_arg_suffix,
+                                                                      a_arg_name_base_override_in => 'x'));
     END;
 
     --------------------------------------------------------------------------------
@@ -551,9 +568,20 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                                  char_used   => 'B');
         pete_assert.eq(a_expected_in => 'col = ' ||
                                         tapir_config.get_object_arg_tmpl ||
-                                        tapir_config.get_in_arg_suffix ||
                                         '.col',
                        a_actual_in   => l_column.get_selection_object);
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_object_arg_tmpl ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_object(a_arg_inout_suffix_in => tapir_config.get_in_arg_suffix));
+        pete_assert.eq(a_expected_in => 'col = x.col',
+                       a_actual_in   => l_column.get_selection_object(a_arg_name_base_override_in => 'x'));
+        pete_assert.eq(a_expected_in => 'col = x' ||
+                                        tapir_config.get_in_arg_suffix ||
+                                        '.col',
+                       a_actual_in   => l_column.get_selection_object(a_arg_inout_suffix_in       => tapir_config.get_in_arg_suffix,
+                                                                      a_arg_name_base_override_in => 'x'));
     END;
 
     --------------------------------------------------------------------------------
@@ -570,9 +598,14 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                                  char_used   => 'B');
         pete_assert.eq(a_expected_in => 'col = ' ||
                                         tapir_config.get_record_table_arg_tmpl ||
+                                        '(tradaa).col',
+                       a_actual_in   => l_column.get_selection_rectab(a_iterator_name_in => 'tradaa'));
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_record_table_arg_tmpl ||
                                         tapir_config.get_in_arg_suffix ||
                                         '(tradaa).col',
-                       a_actual_in   => l_column.get_selection_rectab('tradaa'));
+                       a_actual_in   => l_column.get_selection_rectab(a_iterator_name_in    => 'tradaa',
+                                                                      a_arg_inout_suffix_in => tapir_config.get_in_arg_suffix));
     END;
 
     --------------------------------------------------------------------------------
@@ -589,9 +622,14 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
                                  char_used   => 'B');
         pete_assert.eq(a_expected_in => 'col = ' ||
                                         tapir_config.get_object_table_arg_tmpl ||
+                                        '(tradaa).col',
+                       a_actual_in   => l_column.get_selection_objtab(a_iterator_name_in => 'tradaa'));
+        pete_assert.eq(a_expected_in => 'col = ' ||
+                                        tapir_config.get_object_table_arg_tmpl ||
                                         tapir_config.get_in_arg_suffix ||
                                         '(tradaa).col',
-                       a_actual_in   => l_column.get_selection_objtab('tradaa'));
+                       a_actual_in   => l_column.get_selection_objtab(a_iterator_name_in    => 'tradaa',
+                                                                      a_arg_inout_suffix_in => tapir_config.get_in_arg_suffix));
     END;
 
 END;

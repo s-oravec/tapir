@@ -76,11 +76,14 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
     BEGIN
         FOR i IN 1 .. self.column_list.count
         LOOP
-            if i != self.column_list.count then
-            l_result := l_result || self.column_list(i).get_ctor_arg_decl || ',' || chr(10);
-            else
-            l_result := l_result || self.column_list(i).get_ctor_arg_decl || chr(10);
-            end if;
+            IF i != self.column_list.count
+            THEN
+                l_result := l_result || self.column_list(i).get_ctor_arg_decl || ',' ||
+                            chr(10);
+            ELSE
+                l_result := l_result || self.column_list(i).get_ctor_arg_decl ||
+                            chr(10);
+            END IF;
         END LOOP;
         --
         RETURN l_result;
@@ -95,6 +98,22 @@ CREATE OR REPLACE TYPE BODY tapir_table AS
         LOOP
             l_result := l_result || self.column_list(i).get_ctor_attr_asgn ||
                         chr(10);
+        END LOOP;
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_primary_key_constraint RETURN TAPIR_CONSTRAINT IS
+        l_result TAPIR_CONSTRAINT := NULL;
+    BEGIN
+        FOR i IN 1 .. self.constraint_list.count
+        LOOP
+            IF self.constraint_list(i).constraint_type = 'P'
+            THEN
+                l_result := self.constraint_list(i);
+            END IF;
         END LOOP;
         --
         RETURN l_result;

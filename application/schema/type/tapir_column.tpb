@@ -130,57 +130,68 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
     END;
 
     --------------------------------------------------------------------------------
-    MEMBER FUNCTION get_selection_arg RETURN VARCHAR2 IS
+    MEMBER FUNCTION get_selection_arg(a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL)
+        RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
         --
         l_result := lower(self.column_name) || ' = ' ||
                     REPLACE(tapir_config.get_scalar_arg_tmpl,
                             '{columnName}',
-                            lower(self.column_name)) ||
-                    tapir_config.get_in_arg_suffix;
+                            lower(self.column_name)) || a_arg_inout_suffix_in;
         --
         RETURN l_result;
         --
     END;
 
     --------------------------------------------------------------------------------
-    MEMBER FUNCTION get_selection_record RETURN VARCHAR2 IS
+    MEMBER FUNCTION get_selection_record
+    (
+        a_arg_inout_suffix_in       IN VARCHAR2 DEFAULT NULL,
+        a_arg_name_base_override_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
         --
         l_result := lower(self.column_name) || ' = ' ||
-                    tapir_config.get_record_arg_tmpl ||
-                    tapir_config.get_in_arg_suffix || '.' ||
-                    lower(self.column_name);
+                    nvl(a_arg_name_base_override_in,
+                        tapir_config.get_record_arg_tmpl) ||
+                    a_arg_inout_suffix_in || '.' || lower(self.column_name);
         --
         RETURN l_result;
         --
     END;
 
     --------------------------------------------------------------------------------
-    MEMBER FUNCTION get_selection_object RETURN VARCHAR2 IS
+    MEMBER FUNCTION get_selection_object
+    (
+        a_arg_inout_suffix_in       IN VARCHAR2 DEFAULT NULL,
+        a_arg_name_base_override_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
         --
         l_result := lower(self.column_name) || ' = ' ||
-                    tapir_config.get_object_arg_tmpl ||
-                    tapir_config.get_in_arg_suffix || '.' ||
-                    lower(self.column_name);
+                    nvl(a_arg_name_base_override_in,
+                        tapir_config.get_object_arg_tmpl) ||
+                    a_arg_inout_suffix_in || '.' || lower(self.column_name);
         --
         RETURN l_result;
         --
     END;
 
     --------------------------------------------------------------------------------
-    MEMBER FUNCTION get_selection_rectab(a_iterator_name_in IN VARCHAR2)
-        RETURN VARCHAR2 IS
+    MEMBER FUNCTION get_selection_rectab
+    (
+        a_iterator_name_in    IN VARCHAR2,
+        a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
         --
         l_result := lower(self.column_name) || ' = ' ||
                     tapir_config.get_record_table_arg_tmpl ||
-                    tapir_config.get_in_arg_suffix || '(' || a_iterator_name_in || ')' || '.' ||
+                    a_arg_inout_suffix_in || '(' || a_iterator_name_in || ')' || '.' ||
                     lower(self.column_name);
         --
         RETURN l_result;
@@ -188,14 +199,17 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
     END;
 
     --------------------------------------------------------------------------------
-    MEMBER FUNCTION get_selection_objtab(a_iterator_name_in IN VARCHAR2)
-        RETURN VARCHAR2 IS
+    MEMBER FUNCTION get_selection_objtab
+    (
+        a_iterator_name_in    IN VARCHAR2,
+        a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN
         --
         l_result := lower(self.column_name) || ' = ' ||
                     tapir_config.get_object_table_arg_tmpl ||
-                    tapir_config.get_in_arg_suffix || '(' || a_iterator_name_in || ')' || '.' ||
+                    a_arg_inout_suffix_in || '(' || a_iterator_name_in || ')' || '.' ||
                     lower(self.column_name);
         --
         RETURN l_result;

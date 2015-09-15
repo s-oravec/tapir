@@ -47,28 +47,45 @@ CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
     MEMBER FUNCTION get_ctor_attr_asgn RETURN VARCHAR2,
 
 -- selection expression for scalar column in argument
--- <column_name> = <scalar_arg_prefix><column_name> and
-    MEMBER FUNCTION get_selection_arg RETURN VARCHAR2,
+-- <column_name> = <scalar_arg_prefix><column_name><arg_inout_suffix> and
+--TODO: change defaults to '_in'
+    MEMBER FUNCTION get_selection_arg(a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL)
+        RETURN VARCHAR2,
 
 -- selection expression list for columns of record argument
--- <column_name> = <record_arg_prefix><object_name>.<column_name> and
-    MEMBER FUNCTION get_selection_record RETURN VARCHAR2,
+-- <column_name> = <record_arg_prefix><object_name><arg_inout_suffix>.<column_name> and
+-- <record_arg_prefix><object_name><arg_inout_suffix> can be overriden by a_arg_name_base_override_in
+    MEMBER FUNCTION get_selection_record
+    (
+        a_arg_inout_suffix_in       IN VARCHAR2 DEFAULT NULL,
+        a_arg_name_base_override_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2,
 
 --
 -- selection expression list for columns of object argument
--- <column_name> = <object_arg_prefix><object_name>.<column_name> and
-    MEMBER FUNCTION get_selection_object RETURN VARCHAR2,
+-- <column_name> = <object_arg_prefix><object_name><arg_inout_suffix>.<column_name> and
+    MEMBER FUNCTION get_selection_object
+    (
+        a_arg_inout_suffix_in       IN VARCHAR2 DEFAULT NULL,
+        a_arg_name_base_override_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2,
 
 --
 -- selection expression list for columns of table of records argument
--- <column_name> = <record_table_arg_prefix><object_name>(iterator).<column_name> and
-    MEMBER FUNCTION get_selection_rectab(a_iterator_name_in IN VARCHAR2)
-        RETURN VARCHAR2,
+-- <column_name> = <record_table_arg_prefix><object_name><arg_inout_suffix>(iterator).<column_name> and
+    MEMBER FUNCTION get_selection_rectab
+    (
+        a_iterator_name_in    IN VARCHAR2,
+        a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2,
 
 --
 -- selection expression list for columns of table of objects argument
--- <column_name> = <object_table_arg_prefix><object_name>(iterator).<column_name> and
-    MEMBER FUNCTION get_selection_objtab(a_iterator_name_in IN VARCHAR2)
-        RETURN VARCHAR2
+-- <column_name> = <object_table_arg_prefix><object_name><arg_inout_suffix>(iterator).<column_name> and
+    MEMBER FUNCTION get_selection_objtab
+    (
+        a_iterator_name_in    IN VARCHAR2,
+        a_arg_inout_suffix_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2
 )
 /

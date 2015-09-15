@@ -30,7 +30,9 @@ CREATE OR REPLACE TYPE tapir_table FORCE UNDER tapir_object_with_columns
 
     MEMBER FUNCTION get_obj_type_ctor_args_decl RETURN VARCHAR2,
 
-    MEMBER FUNCTION get_obj_type_ctor_attr_asgn RETURN VARCHAR2
+    MEMBER FUNCTION get_obj_type_ctor_attr_asgn RETURN VARCHAR2,
+
+    MEMBER FUNCTION get_primary_key_constraint RETURN tapir_constraint
 
 )
 /

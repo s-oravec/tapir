@@ -380,25 +380,35 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
     FUNCTION get_tapi_package_bdy_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
         -- NoFormat Start
+        --TODO: _in -> tapir_config.get_in_arg_suffix
         l_stmt_tmpl VARCHAR2(32767) --
         := 'CREATE OR REPLACE PACKAGE BODY #tapirPackageName# AS' || chr(10)
            || '' || chr(10)
-           || '    --get' || chr(10)
            || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION getRecByPKey(a_pkey_in IN #typPkeyRec#) RETURN #typRec#' || chr(10)
            || '    IS' || chr(10)
+           || '        l_result #typRec#;' || chr(10)
            || '    BEGIN' || chr(10)
-           || '        NULL;' || chr(10)
+           || '        SELECT * INTO l_result FROM #tableName# WHERE #aPKeySelectionList#;' || chr(10)
+           || '        --' || chr(10)
+           || '        RETURN l_result;' || chr(10)
+           || '        --' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION getObjByPKey(a_pkey_in IN #typPkeyRec#) RETURN #objTypeName#' || chr(10)
            || '    IS' || chr(10)
+           || '        l_result #objTypeName#;' || chr(10)
            || '    BEGIN' || chr(10)
-           || '        NULL;' || chr(10)
+           || '        SELECT #objTypeName#(#TableColumnList#)' || chr(10)
+           || '          INTO l_result' || chr(10) 
+           || '          FROM #tableName#' || chr(10)
+           || '         WHERE #aPKeySelectionList#;' || chr(10)
+           || '       --' || chr(10) 
+           || '       RETURN l_result;' || chr(10)
+           || '       --' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
-           || '' || chr(10)
-           || '    --create' || chr(10)
            || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE ins(#aRecIO# IN OUT #typRec#)' || chr(10)
            || '    IS' || chr(10)
@@ -406,27 +416,27 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE ins(#aObjIO# IN OUT #objTypeName#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE ins(#aTabIO# IN OUT NOCOPY #typTab#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE ins(#aColIO# IN OUT NOCOPY #collTypeName#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
-           || '' || chr(10)
-           || '    --update' || chr(10)
-           || '    --by default updates all columns' || chr(10)
            || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE upd' || chr(10)
            || '    (' || chr(10)
@@ -438,6 +448,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE upd' || chr(10)
            || '    (' || chr(10)
            || '        #aObjIO#               IN OUT #objTypeName#,' || chr(10)
@@ -448,6 +459,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE upd' || chr(10)
            || '    (' || chr(10)
            || '        #aTabIO#               IN OUT NOCOPY #typTab#,' || chr(10)
@@ -458,6 +470,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE upd' || chr(10)
            || '    (' || chr(10)
            || '        #aColIO#               IN OUT NOCOPY #collTypeName#,' || chr(10)
@@ -468,8 +481,6 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
-           || '' || chr(10)
-           || '    --delete' || chr(10)
            || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE del(#aRecIn# IN #typRec#)' || chr(10)
            || '    IS' || chr(10)
@@ -477,26 +488,27 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE del(#aObjIn# IN #objTypeName#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE del(#aTabIn# IN #typTab#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    PROCEDURE del(#aColIn# IN #collTypeName#)' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
-           || '' || chr(10)
-           || '    --convert functions' || chr(10)
            || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION convert(#aRecIn# IN #typRec#) RETURN #objTypeName#' || chr(10)
            || '    IS' || chr(10)
@@ -504,18 +516,21 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION convert(#aObjIn# IN #objTypeName#) RETURN #typRec#' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION convert(#aTabIn# IN #typTab#) RETURN #collTypeName#' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
            || '        NULL;' || chr(10)
            || '    END;' || chr(10)
            || '' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
            || '    FUNCTION convert(#aColIn# IN #collTypeName#) RETURN #typTab#' || chr(10)
            || '    IS' || chr(10)
            || '    BEGIN' || chr(10)
@@ -525,6 +540,7 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || 'END;';
            -- NoFormat End
         --
+        l_pkey   tapir_constraint;
         l_result VARCHAR2(32767);
         --
     BEGIN
@@ -584,6 +600,19 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
                                     tapir_config.get_rowtypetab_tp_tmpl),
                             '#typRec#',
                             tapir_config.get_rowtype_tp_alias_tmpl);
+        --pkey
+        l_pkey := a_tapir_table_in.get_primary_key_constraint;
+        IF l_pkey IS NOT NULL
+        THEN
+            l_result := REPLACE(l_result,
+                                '#aPKeySelectionList#',
+                                l_pkey.get_selection_record_cols_list(a_arg_inout_suffix_in       => tapir_config.get_in_arg_suffix,
+                                                                      a_arg_name_base_override_in => 'a_pkey'));
+        END IF;
+        --table column list
+        l_result := REPLACE(l_result,
+                            '#TableColumnList#',
+                            a_tapir_table_in.get_column_list);
         --
         RETURN l_result;
         --

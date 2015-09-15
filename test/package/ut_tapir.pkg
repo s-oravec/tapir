@@ -224,7 +224,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
                        a_actual_in   => l_count,
                        a_comment_in  => 'package ' ||
                                         g_tapir_table.get_tapir_package_name ||
-                                        ' should have been created');
+                                        ' and it''s body should have been created');
         --
     END;
 
