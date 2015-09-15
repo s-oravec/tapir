@@ -2,9 +2,6 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir test';
 
-    --TODO: create collection type
-    --TODO: drop collection type
-
     PROCEDURE before_all;
 
     PROCEDURE create_surrogate_key_seq(d VARCHAR2 := 'create surrogate key sequence should work');
@@ -12,6 +9,9 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
 
     PROCEDURE create_object_type(d VARCHAR2 := 'create object type should work');
     PROCEDURE drop_object_type(d VARCHAR2 := 'drop object type should work');
+
+    PROCEDURE create_coll_type(d VARCHAR2 := 'create coll type should work');
+    PROCEDURE drop_coll_type(d VARCHAR2 := 'drop coll type should work');
 
     PROCEDURE after_all;
 
@@ -172,6 +172,87 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
                        a_actual_in   => l_count,
                        a_comment_in  => 'object type ' ||
                                         g_tapir_table.get_obj_type_name ||
+                                        ' should have been dropped');
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE create_coll_type(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare
+        BEGIN
+            --collection
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_coll_type_name ||
+                              ' force';
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        BEGIN
+            --object type
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
+                              ' force';
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --test
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_types
+         WHERE type_name = upper(g_tapir_table.get_coll_type_name);
+        --
+        pete_assert.eq(a_expected_in => 1,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'collection type ' ||
+                                        g_tapir_table.get_obj_type_name ||
+                                        ' should have been created');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE drop_coll_type(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare - drop
+        BEGIN
+            --collection
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_coll_type_name ||
+                              ' force';
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        BEGIN
+            --object type
+            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
+                              ' force';
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL;
+        END;
+        --prepare - create
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
+        --test
+        tapir.drop_tapi_coll_type(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_types
+         WHERE type_name = upper(g_tapir_table.get_coll_type_name);
+        --
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'collection type ' ||
+                                        g_tapir_table.get_coll_type_name ||
                                         ' should have been dropped');
     END;
 
