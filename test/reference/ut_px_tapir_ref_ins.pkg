@@ -70,7 +70,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
                        a_comment_in  => 'Table is empty');
         --test
         g_rec.id := NULL;
-        px_tapir_reference.ins(a_rec_in => g_rec);
+        px_tapir_reference.ins(a_rec_io => g_rec);
         --assert
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => helper_get_count,
@@ -90,7 +90,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
                        a_actual_in   => helper_get_count,
                        a_comment_in  => 'Table is empty');
         --test
-        px_tapir_reference.ins(a_rec_in => g_rec);
+        px_tapir_reference.ins(a_rec_io => g_rec);
         --assert
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => helper_get_count,
@@ -108,7 +108,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
                        a_actual_in   => helper_get_count,
                        a_comment_in  => 'Table is empty');
         --test
-        px_tapir_reference.ins(a_obj_in => g_obj);
+        px_tapir_reference.ins(a_obj_io => g_obj);
         --assert
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => helper_get_count,
@@ -126,7 +126,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
                        a_actual_in   => helper_get_count,
                        a_comment_in  => 'Table is empty');
         --test
-        px_tapir_reference.ins(a_tab_in => g_tab);
+        px_tapir_reference.ins(a_tab_io => g_tab);
         --assert
         pete_assert.eq(a_expected_in => 2,
                        a_actual_in   => helper_get_count,
@@ -144,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
                        a_actual_in   => helper_get_count,
                        a_comment_in  => 'Table is empty');
         --test
-        px_tapir_reference.ins(a_col_in => g_col);
+        px_tapir_reference.ins(a_col_io => g_col);
         --assert
         pete_assert.eq(a_expected_in => 2,
                        a_actual_in   => helper_get_count,

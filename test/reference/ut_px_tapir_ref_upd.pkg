@@ -43,7 +43,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         g_col := px_tapir_reference.convert(a_tab_in => g_tab);
         g_obj := g_col(1);
         --
-        px_tapir_reference.ins(a_tab_in => g_tab);
+        px_tapir_reference.ins(a_tab_io => g_tab);
         --
     END;
 
@@ -62,7 +62,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         --prepare
         g_rec.v1 := 'Hello World!';
         --test
-        px_tapir_reference.upd(a_rec_in => g_rec);
+        px_tapir_reference.upd(a_rec_io => g_rec);
         --assert
         l_pkey.id := g_rec.id;
         g_rec     := px_tapir_reference.getRecByPkey(a_pkey_in => l_pkey);
@@ -80,7 +80,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         --prepare
         g_obj.v1 := 'Hello World!';
         --test
-        px_tapir_reference.upd(a_obj_in => g_obj);
+        px_tapir_reference.upd(a_obj_io => g_obj);
         --assert
         l_pkey.id := g_obj.id;
         g_obj     := px_tapir_reference.getObjByPkey(a_pkey_in => l_pkey);
@@ -88,7 +88,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
                        a_actual_in   => g_obj.v1);
         --
     END;
-    --
+
     --------------------------------------------------------------------------------
     PROCEDURE upd_tab_update_works(d VARCHAR2) IS
     BEGIN
@@ -98,7 +98,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         g_tab(1).v1 := 'Hello World!';
         g_tab(2).v1 := 'Hello Moon!';
         --test
-        px_tapir_reference.upd(a_tab_in => g_tab);
+        px_tapir_reference.upd(a_tab_io => g_tab);
         --assert
         SELECT * BULK COLLECT INTO g_tab FROM tapir_reference ORDER BY id;
         pete_assert.eq(a_expected_in => 'Hello World!',
@@ -117,7 +117,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         g_col(1).v1 := 'Hello World!';
         g_col(2).v1 := 'Hello Moon!';
         --test
-        px_tapir_reference.upd(a_col_in => g_col);
+        px_tapir_reference.upd(a_col_io => g_col);
         --assert
         SELECT CAST(COLLECT(tx_tapir_reference(id, id1, id2, in1, v1)) AS
                     cx_tapir_reference)
