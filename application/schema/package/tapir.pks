@@ -47,6 +47,20 @@ CREATE OR REPLACE PACKAGE tapir AS
     --
     PROCEDURE drop_tapi_coll_type(a_table_name_in IN VARCHAR2);
 
+    --
+    -- create package specification
+    --
+    -- %argument a_table_name_in table name
+    --
+    PROCEDURE create_tapi_package(a_table_name_in IN VARCHAR2);
+
+    --
+    -- drop package specification
+    --
+    -- %argument a_table_name_in table name
+    --
+    PROCEDURE drop_tapi_package(a_table_name_in IN VARCHAR2);
+
     --------------------------------------------------------------------------------
     --
     -- drop surrogate key sequence

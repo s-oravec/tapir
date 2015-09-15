@@ -87,6 +87,12 @@ CREATE OR REPLACE PACKAGE tapir_util AS
     FUNCTION get_tapi_package_bdy_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2;
 
+    --
+    -- Returns TAPI package specification drop statement
+    --
+    -- %argument a_tapir_table_in
+    --
+    FUNCTION get_tapi_package_drop(a_tapir_table_in IN tapir_table) RETURN VARCHAR2;
 
 END;
 /

@@ -4,6 +4,8 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
 
     PROCEDURE before_all;
 
+    PROCEDURE before_each;
+
     PROCEDURE create_surrogate_key_seq(d VARCHAR2 := 'create surrogate key sequence should work');
     PROCEDURE drop_surrogate_key_seq(d VARCHAR2 := 'drop surrogate key sequence should work');
 
@@ -12,6 +14,9 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
 
     PROCEDURE create_coll_type(d VARCHAR2 := 'create coll type should work');
     PROCEDURE drop_coll_type(d VARCHAR2 := 'drop coll type should work');
+
+    PROCEDURE create_package(d VARCHAR2 := 'create package should work');
+    PROCEDURE drop_package(d VARCHAR2 := 'drop package should work');
 
     PROCEDURE after_all;
 
@@ -52,27 +57,25 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     END;
 
     --------------------------------------------------------------------------------
+    PROCEDURE before_each IS
+    BEGIN
+        --cleanup TAPI objects
+        tapir.drop_all_for_table(a_table_name_in => g_table_name);
+    END;
+
+    --------------------------------------------------------------------------------
     PROCEDURE create_surrogate_key_seq(d VARCHAR2) IS
         l_count NUMBER;
     BEGIN
         --log
         pete_logger.log_method_description(d);
-        --prepare
-        BEGIN
-            EXECUTE IMMEDIATE 'drop sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name;
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
         --test
         tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         --assert
         SELECT COUNT(1)
           INTO l_count
           FROM user_sequences
-         WHERE sequence_name =
-               upper(g_tapir_table.get_surrogate_key_seq_name);
+         WHERE sequence_name = upper(g_tapir_table.get_surrogate_key_seq_name);
         --
         pete_assert.eq(a_expected_in => 1,
                        a_actual_in   => l_count,
@@ -89,23 +92,14 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         --log
         pete_logger.log_method_description(d);
         --prepare
-        BEGIN
-            EXECUTE IMMEDIATE 'drop sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name;
-            EXECUTE IMMEDIATE 'create sequence ' ||
-                              g_tapir_table.get_surrogate_key_seq_name;
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
+        tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         --test
         tapir.drop_surrogate_key_seq(a_table_name_in => g_table_name);
         --assert
         SELECT COUNT(1)
           INTO l_count
           FROM user_sequences
-         WHERE sequence_name =
-               upper(g_tapir_table.get_surrogate_key_seq_name);
+         WHERE sequence_name = upper(g_tapir_table.get_surrogate_key_seq_name);
         --
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => l_count,
@@ -121,14 +115,6 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     BEGIN
         --log
         pete_logger.log_method_description(d);
-        --prepare
-        BEGIN
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
-                              ' force';
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
         --test
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         --assert
@@ -152,14 +138,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         --log
         pete_logger.log_method_description(d);
         --prepare
-        BEGIN
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
-                              ' force';
-            tapir.create_tapi_object_type(a_table_name_in => g_table_name);
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         --test
         tapir.drop_tapi_object_type(a_table_name_in => g_table_name);
         --assert
@@ -181,23 +160,6 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     BEGIN
         --log
         pete_logger.log_method_description(d);
-        --prepare
-        BEGIN
-            --collection
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_coll_type_name ||
-                              ' force';
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
-        BEGIN
-            --object type
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
-                              ' force';
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
         --test
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
@@ -221,24 +183,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     BEGIN
         --log
         pete_logger.log_method_description(d);
-        --prepare - drop
-        BEGIN
-            --collection
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_coll_type_name ||
-                              ' force';
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
-        BEGIN
-            --object type
-            EXECUTE IMMEDIATE 'drop type ' || g_tapir_table.get_obj_type_name ||
-                              ' force';
-        EXCEPTION
-            WHEN OTHERS THEN
-                NULL;
-        END;
-        --prepare - create
+        --prepare
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
         --test
@@ -257,8 +202,64 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     END;
 
     --------------------------------------------------------------------------------
+    PROCEDURE create_package(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare - create required objects
+        tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
+        --test
+        tapir.create_tapi_package(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_objects
+         WHERE object_type IN ('PACKAGE', 'PACKAGE BODY')
+           AND object_name = upper(g_tapir_table.get_tapir_package_name);
+        --
+        pete_assert.eq(a_expected_in => 2,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'package ' ||
+                                        g_tapir_table.get_tapir_package_name ||
+                                        ' should have been created');
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    PROCEDURE drop_package(d VARCHAR2) IS
+        l_count NUMBER;
+    BEGIN
+        --log
+        pete_logger.log_method_description(d);
+        --prepare - create
+        tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
+        tapir.create_tapi_object_type(a_table_name_in => g_table_name);
+        tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
+        tapir.create_tapi_package(a_table_name_in => g_table_name);
+        --test
+        tapir.drop_tapi_package(a_table_name_in => g_table_name);
+        --assert
+        SELECT COUNT(1)
+          INTO l_count
+          FROM user_types
+         WHERE type_name = upper(g_tapir_table.get_tapir_package_name);
+        --
+        pete_assert.eq(a_expected_in => 0,
+                       a_actual_in   => l_count,
+                       a_comment_in  => 'package ' ||
+                                        g_tapir_table.get_tapir_package_name ||
+                                        ' should have been dropped');
+    END;
+
+    --------------------------------------------------------------------------------
     PROCEDURE after_all IS
     BEGIN
+        --cleanup TAPI objects
+        tapir.drop_all_for_table(a_table_name_in => g_table_name);
+        --
         EXECUTE IMMEDIATE 'drop table ' || g_table_name || ' purge';
     END;
 

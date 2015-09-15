@@ -311,70 +311,292 @@ CREATE OR REPLACE PACKAGE BODY tapir_util AS
            || '' || chr(10)
            || 'END;';
            -- NoFormat End
-           --
-           l_result varchar2(32767);
-           --
+        --
+        l_result VARCHAR2(32767);
+        --
     BEGIN
         --package name and table name
-        l_result := replace(replace(l_stmt_tmpl,
+        l_result := REPLACE(REPLACE(l_stmt_tmpl,
                                     '#tapirPackageName#',
                                     a_tapir_table_in.get_tapir_package_name),
-                                '#tableName#',
-                                lower(a_tapir_table_in.name));
+                            '#tableName#',
+                            lower(a_tapir_table_in.name));
         --type names
-        l_result := replace(replace(l_result,
+        l_result := REPLACE(REPLACE(l_result,
                                     '#objTypeName#',
                                     a_tapir_table_in.get_obj_type_name),
-                                '#collTypeName#',
-                                a_tapir_table_in.get_coll_type_name);
+                            '#collTypeName#',
+                            a_tapir_table_in.get_coll_type_name);
         --update indicator record type declaration
-        l_result := replace(l_result,
+        l_result := REPLACE(l_result,
                             '#updIndRecordTypeDeclarationColumnList#',
                             a_tapir_table_in.get_updind_rectp_decl_col_list);
         --arguments - in
-        l_result := replace(replace(replace(replace(l_result,
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(l_result,
                                                     '#aRecIn#',
-                                                    tapir_config.get_record_arg_tmpl || tapir_config.get_in_arg_suffix),
-                                                '#aObjIn#',
-                                                tapir_config.get_object_arg_tmpl || tapir_config.get_in_arg_suffix),
-                                            '#aTabIn#',
-                                            tapir_config.get_record_table_arg_tmpl || tapir_config.get_in_arg_suffix),
-                                        '#aColIn#',
-                                        tapir_config.get_object_table_arg_tmpl || tapir_config.get_in_arg_suffix);
+                                                    tapir_config.get_record_arg_tmpl ||
+                                                    tapir_config.get_in_arg_suffix),
+                                            '#aObjIn#',
+                                            tapir_config.get_object_arg_tmpl ||
+                                            tapir_config.get_in_arg_suffix),
+                                    '#aTabIn#',
+                                    tapir_config.get_record_table_arg_tmpl ||
+                                    tapir_config.get_in_arg_suffix),
+                            '#aColIn#',
+                            tapir_config.get_object_table_arg_tmpl ||
+                            tapir_config.get_in_arg_suffix);
         --arguments - in out
-        l_result := replace(replace(replace(replace(l_result,
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(l_result,
                                                     '#aRecIO#',
-                                                    tapir_config.get_record_arg_tmpl || tapir_config.get_inout_arg_suffix),
-                                                '#aObjIO#',
-                                                tapir_config.get_object_arg_tmpl || tapir_config.get_inout_arg_suffix),
-                                            '#aTabIO#',
-                                            tapir_config.get_record_table_arg_tmpl || tapir_config.get_inout_arg_suffix),
-                                        '#aColIO#',
-                                        tapir_config.get_object_table_arg_tmpl || tapir_config.get_inout_arg_suffix);
+                                                    tapir_config.get_record_arg_tmpl ||
+                                                    tapir_config.get_inout_arg_suffix),
+                                            '#aObjIO#',
+                                            tapir_config.get_object_arg_tmpl ||
+                                            tapir_config.get_inout_arg_suffix),
+                                    '#aTabIO#',
+                                    tapir_config.get_record_table_arg_tmpl ||
+                                    tapir_config.get_inout_arg_suffix),
+                            '#aColIO#',
+                            tapir_config.get_object_table_arg_tmpl ||
+                            tapir_config.get_inout_arg_suffix);
         --types
-        l_result := replace(replace(replace(replace(replace(l_result,
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(l_result,
                                                             '#typUpdIndTab#',
                                                             tapir_config.get_upd_ind_tab_rectp_tmpl),
-                                                        '#typUpdIndRec#',
-                                                        tapir_config.get_upd_ind_rectp_tmpl),
-                                                    '#typPkeyRec#',
-                                                    tapir_config.get_pkey_rec_type_tmpl),
-                                                '#typTab#',
-                                                tapir_config.get_rowtypetab_tp_tmpl),
-                                            '#typRec#',
-                                            tapir_config.get_rowtype_tp_alias_tmpl);
+                                                    '#typUpdIndRec#',
+                                                    tapir_config.get_upd_ind_rectp_tmpl),
+                                            '#typPkeyRec#',
+                                            tapir_config.get_pkey_rec_type_tmpl),
+                                    '#typTab#',
+                                    tapir_config.get_rowtypetab_tp_tmpl),
+                            '#typRec#',
+                            tapir_config.get_rowtype_tp_alias_tmpl);
         --
-        return l_result;
+        RETURN l_result;
         --
     END;
 
     --------------------------------------------------------------------------------
     FUNCTION get_tapi_package_bdy_create(a_tapir_table_in IN tapir_table)
         RETURN VARCHAR2 IS
-        l_stmt_tmpl VARCHAR2(255) --
-        := '';
+        -- NoFormat Start
+        l_stmt_tmpl VARCHAR2(32767) --
+        := 'CREATE OR REPLACE PACKAGE BODY #tapirPackageName# AS' || chr(10)
+           || '' || chr(10)
+           || '    --get' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    FUNCTION getRecByPKey(a_pkey_in IN #typPkeyRec#) RETURN #typRec#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    FUNCTION getObjByPKey(a_pkey_in IN #typPkeyRec#) RETURN #objTypeName#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '' || chr(10)
+           || '    --create' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE ins(#aRecIO# IN OUT #typRec#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE ins(#aObjIO# IN OUT #objTypeName#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE ins(#aTabIO# IN OUT NOCOPY #typTab#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE ins(#aColIO# IN OUT NOCOPY #collTypeName#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '' || chr(10)
+           || '    --update' || chr(10)
+           || '    --by default updates all columns' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aRecIO#               IN OUT #typRec#,' || chr(10)
+           || '        a_rec_upd_indicator_in IN #typUpdIndRec# DEFAULT NULL' || chr(10)
+           || '    )' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aObjIO#               IN OUT #objTypeName#,' || chr(10)
+           || '        a_rec_upd_indicator_in IN #typUpdIndRec# DEFAULT NULL' || chr(10)
+           || '    )' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aTabIO#               IN OUT NOCOPY #typTab#,' || chr(10)
+           || '        a_tab_upd_indicator_in IN #typUpdIndTab# DEFAULT NULL' || chr(10)
+           || '    )' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE upd' || chr(10)
+           || '    (' || chr(10)
+           || '        #aColIO#               IN OUT NOCOPY #collTypeName#,' || chr(10)
+           || '        a_tab_upd_indicator_in IN #typUpdIndTab# DEFAULT NULL' || chr(10)
+           || '    )' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '' || chr(10)
+           || '    --delete' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    PROCEDURE del(#aRecIn# IN #typRec#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE del(#aObjIn# IN #objTypeName#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE del(#aTabIn# IN #typTab#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    PROCEDURE del(#aColIn# IN #collTypeName#)' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '' || chr(10)
+           || '    --convert functions' || chr(10)
+           || '    --------------------------------------------------------------------------------' || chr(10)
+           || '    FUNCTION convert(#aRecIn# IN #typRec#) RETURN #objTypeName#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    FUNCTION convert(#aObjIn# IN #objTypeName#) RETURN #typRec#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    FUNCTION convert(#aTabIn# IN #typTab#) RETURN #collTypeName#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || '    FUNCTION convert(#aColIn# IN #collTypeName#) RETURN #typTab#' || chr(10)
+           || '    IS' || chr(10)
+           || '    BEGIN' || chr(10)
+           || '        NULL;' || chr(10)
+           || '    END;' || chr(10)
+           || '' || chr(10)
+           || 'END;';
+           -- NoFormat End
+        --
+        l_result VARCHAR2(32767);
+        --
     BEGIN
-        RETURN '';
+        --package name and table name
+        l_result := REPLACE(REPLACE(l_stmt_tmpl,
+                                    '#tapirPackageName#',
+                                    a_tapir_table_in.get_tapir_package_name),
+                            '#tableName#',
+                            lower(a_tapir_table_in.name));
+        --type names
+        l_result := REPLACE(REPLACE(l_result,
+                                    '#objTypeName#',
+                                    a_tapir_table_in.get_obj_type_name),
+                            '#collTypeName#',
+                            a_tapir_table_in.get_coll_type_name);
+        --update indicator record type declaration
+        l_result := REPLACE(l_result,
+                            '#updIndRecordTypeDeclarationColumnList#',
+                            a_tapir_table_in.get_updind_rectp_decl_col_list);
+        --arguments - in
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(l_result,
+                                                    '#aRecIn#',
+                                                    tapir_config.get_record_arg_tmpl ||
+                                                    tapir_config.get_in_arg_suffix),
+                                            '#aObjIn#',
+                                            tapir_config.get_object_arg_tmpl ||
+                                            tapir_config.get_in_arg_suffix),
+                                    '#aTabIn#',
+                                    tapir_config.get_record_table_arg_tmpl ||
+                                    tapir_config.get_in_arg_suffix),
+                            '#aColIn#',
+                            tapir_config.get_object_table_arg_tmpl ||
+                            tapir_config.get_in_arg_suffix);
+        --arguments - in out
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(l_result,
+                                                    '#aRecIO#',
+                                                    tapir_config.get_record_arg_tmpl ||
+                                                    tapir_config.get_inout_arg_suffix),
+                                            '#aObjIO#',
+                                            tapir_config.get_object_arg_tmpl ||
+                                            tapir_config.get_inout_arg_suffix),
+                                    '#aTabIO#',
+                                    tapir_config.get_record_table_arg_tmpl ||
+                                    tapir_config.get_inout_arg_suffix),
+                            '#aColIO#',
+                            tapir_config.get_object_table_arg_tmpl ||
+                            tapir_config.get_inout_arg_suffix);
+        --types
+        l_result := REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(l_result,
+                                                            '#typUpdIndTab#',
+                                                            tapir_config.get_upd_ind_tab_rectp_tmpl),
+                                                    '#typUpdIndRec#',
+                                                    tapir_config.get_upd_ind_rectp_tmpl),
+                                            '#typPkeyRec#',
+                                            tapir_config.get_pkey_rec_type_tmpl),
+                                    '#typTab#',
+                                    tapir_config.get_rowtypetab_tp_tmpl),
+                            '#typRec#',
+                            tapir_config.get_rowtype_tp_alias_tmpl);
+        --
+        RETURN l_result;
+        --
+    END;
+
+    --------------------------------------------------------------------------------
+    FUNCTION get_tapi_package_drop(a_tapir_table_in IN tapir_table) RETURN VARCHAR2 IS
+        l_stmt_tmpl VARCHAR2(255) --
+        := 'drop package #tapirPackageName#';
+    BEGIN
+        RETURN REPLACE(l_stmt_tmpl,
+                       '#tapirPackageName#',
+                       a_tapir_table_in.get_tapir_package_name);
     END;
 
 END;
