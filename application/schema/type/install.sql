@@ -1,5 +1,15 @@
 @&&run_dir_begin
 
+rem Templating objects
+
+prompt Creating type TAPIR_REPLACE
+@@tapir_replace.tps
+
+prompt Creating type TAPIR_REPLACES
+@@tapir_replaces.tps
+
+rem Table metadata objects
+
 prompt Creating type TAPIR_COLUMN
 @@tapir_column.tps
 

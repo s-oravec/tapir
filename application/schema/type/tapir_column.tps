@@ -40,6 +40,13 @@ CREATE OR REPLACE TYPE tapir_column FORCE AS OBJECT
 --get column declaration in SQL type
     MEMBER FUNCTION get_type_decl RETURN VARCHAR2,
 
+--get assignment
+    MEMBER FUNCTION get_assignment
+    (
+        a_src_object_name_in IN VARCHAR2 DEFAULT NULL,
+        a_tgt_object_name_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2,
+
 --get column argument in constructor of SQL type
     MEMBER FUNCTION get_ctor_arg_decl RETURN VARCHAR2,
 

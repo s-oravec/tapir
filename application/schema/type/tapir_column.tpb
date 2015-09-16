@@ -106,6 +106,29 @@ CREATE OR REPLACE TYPE BODY tapir_column AS
     END;
 
     --------------------------------------------------------------------------------
+    MEMBER FUNCTION get_assignment
+    (
+        a_src_object_name_in IN VARCHAR2 DEFAULT NULL,
+        a_tgt_object_name_in IN VARCHAR2 DEFAULT NULL
+    ) RETURN VARCHAR2 IS
+        l_src_object_name_in VARCHAR2(30);
+        l_tgt_object_name_in VARCHAR2(30);
+    BEGIN
+        --
+        IF a_src_object_name_in IS NOT NULL
+        THEN
+            l_src_object_name_in := a_src_object_name_in || '.';
+        END IF;
+        IF a_tgt_object_name_in IS NOT NULL
+        THEN
+            l_tgt_object_name_in := a_tgt_object_name_in || '.';
+        END IF;
+        --
+        RETURN l_tgt_object_name_in || LOWER(SELF.COLUMN_NAME) || ' := ' || l_src_object_name_in || LOWER(SELF.COLUMN_NAME) || ';';
+        --
+    END;
+
+    --------------------------------------------------------------------------------
     MEMBER FUNCTION get_ctor_arg_decl RETURN VARCHAR2 IS
         l_result VARCHAR2(255);
     BEGIN

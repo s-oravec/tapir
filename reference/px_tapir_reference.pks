@@ -26,6 +26,8 @@ CREATE OR REPLACE PACKAGE px_tapir_reference AS
     FUNCTION getObjByPKey(a_pkey_in IN typ_pkey_rec) RETURN tx_tapir_reference;
 
     --create
+    --TODO: assumption: no triggers with side effects on row
+    --TODO: else whole row has to be in returning clause
     --------------------------------------------------------------------------------
     PROCEDURE ins(a_rec_io IN OUT typ_rec);
     PROCEDURE ins(a_obj_io IN OUT tx_tapir_reference);

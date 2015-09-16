@@ -28,31 +28,25 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     --------------------------------------------------------------------------------
     PROCEDURE ins(a_rec_io IN OUT typ_rec) IS
     BEGIN
-        --TODO: assumption: no triggers with side effects on row 
-        --else whole row has to be in returning clause
-        INSERT INTO tapir_reference
-            (id, id1, id2, in1, v1)
-        VALUES
-            (nvl(a_rec_io.id, sx_tapir_reference.nextval),
-             a_rec_io.id1,
-             a_rec_io.id2,
-             a_rec_io.in1,
-             a_rec_io.v1)
-        RETURNING id INTO a_rec_io.id;
+        --
+        a_rec_io.id := nvl(a_rec_io.id, sx_tapir_reference.nextval);
+        --
+        INSERT INTO tapir_reference VALUES a_rec_io;
     END;
 
     --------------------------------------------------------------------------------
     PROCEDURE ins(a_obj_io IN OUT tx_tapir_reference) IS
     BEGIN
+        --
+        a_obj_io.id := nvl(a_obj_io.id, sx_tapir_reference.nextval);
+        --
         INSERT INTO tapir_reference
-            (id, id1, id2, in1, v1)
         VALUES
-            (nvl(a_obj_io.id, sx_tapir_reference.nextval),
+            (a_obj_io.id,
              a_obj_io.id1,
              a_obj_io.id2,
              a_obj_io.in1,
-             a_obj_io.v1)
-        RETURNING id INTO a_obj_io.id;
+             a_obj_io.v1);
     END;
 
     --------------------------------------------------------------------------------
@@ -114,22 +108,10 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     ) IS
     BEGIN
         UPDATE tapir_reference
-           SET id1 = decode(nvl(a_rec_upd_indicator_in.id1, gc_true),
-                            gc_true,
-                            a_rec_io.id1,
-                            id1),
-               id2 = decode(nvl(a_rec_upd_indicator_in.id2, gc_true),
-                            gc_true,
-                            a_rec_io.id2,
-                            id2),
-               in1 = decode(nvl(a_rec_upd_indicator_in.in1, gc_true),
-                            gc_true,
-                            a_rec_io.in1,
-                            in1),
-               v1  = decode(nvl(a_rec_upd_indicator_in.v1, gc_true),
-                            gc_true,
-                            a_rec_io.v1,
-                            v1)
+           SET id1 = decode(nvl(a_rec_upd_indicator_in.id1, gc_true), gc_true, a_rec_io.id1, id1),
+               id2 = decode(nvl(a_rec_upd_indicator_in.id2, gc_true), gc_true, a_rec_io.id2, id2),
+               in1 = decode(nvl(a_rec_upd_indicator_in.in1, gc_true), gc_true, a_rec_io.in1, in1),
+               v1  = decode(nvl(a_rec_upd_indicator_in.v1, gc_true), gc_true, a_rec_io.v1, v1)
          WHERE id = a_rec_io.id;
     END;
 
@@ -141,22 +123,10 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
     ) IS
     BEGIN
         UPDATE tapir_reference
-           SET id1 = decode(nvl(a_rec_upd_indicator_in.id1, gc_true),
-                            gc_true,
-                            a_obj_io.id1,
-                            id1),
-               id2 = decode(nvl(a_rec_upd_indicator_in.id2, gc_true),
-                            gc_true,
-                            a_obj_io.id2,
-                            id2),
-               in1 = decode(nvl(a_rec_upd_indicator_in.in1, gc_true),
-                            gc_true,
-                            a_obj_io.in1,
-                            in1),
-               v1  = decode(nvl(a_rec_upd_indicator_in.v1, gc_true),
-                            gc_true,
-                            a_obj_io.v1,
-                            v1)
+           SET id1 = decode(nvl(a_rec_upd_indicator_in.id1, gc_true), gc_true, a_obj_io.id1, id1),
+               id2 = decode(nvl(a_rec_upd_indicator_in.id2, gc_true), gc_true, a_obj_io.id2, id2),
+               in1 = decode(nvl(a_rec_upd_indicator_in.in1, gc_true), gc_true, a_obj_io.in1, in1),
+               v1  = decode(nvl(a_rec_upd_indicator_in.v1, gc_true), gc_true, a_obj_io.v1, v1)
          WHERE id = a_obj_io.id;
     END;
 
@@ -173,26 +143,14 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
             THEN
                 FORALL l_iterator IN INDICES OF a_tab_io
                     UPDATE tapir_reference
-                       SET id1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id1,
-                                            gc_true),
-                                        gc_true,
-                                        a_tab_io(l_iterator).id1,
-                                        id1),
-                           id2 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id2,
-                                            gc_true),
-                                        gc_true,
-                                        a_tab_io(l_iterator).id2,
-                                        id2),
-                           in1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).in1,
-                                            gc_true),
-                                        gc_true,
-                                        a_tab_io(l_iterator).in1,
-                                        in1),
-                           v1  = decode(nvl(a_tab_upd_indicator_in(l_iterator).v1,
-                                            gc_true),
-                                        gc_true,
-                                        a_tab_io(l_iterator).v1,
-                                        v1)
+                       SET id1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id1, gc_true),
+                                        gc_true, a_tab_io(l_iterator).id1, id1),
+                           id2 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id2, gc_true),
+                                        gc_true, a_tab_io(l_iterator).id2, id2),
+                           in1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).in1, gc_true),
+                                        gc_true, a_tab_io(l_iterator).in1, in1),
+                           v1  = decode(nvl(a_tab_upd_indicator_in(l_iterator).v1, gc_true),
+                                        gc_true, a_tab_io(l_iterator).v1, v1)
                      WHERE id = a_tab_io(l_iterator).id;
             ELSE
                 raise_application_error(-20001,
@@ -224,26 +182,14 @@ CREATE OR REPLACE PACKAGE BODY px_tapir_reference IS
             THEN
                 FORALL l_iterator IN INDICES OF a_col_io
                     UPDATE tapir_reference
-                       SET id1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id1,
-                                            gc_true),
-                                        gc_true,
-                                        a_col_io(l_iterator).id1,
-                                        id1),
-                           id2 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id2,
-                                            gc_true),
-                                        gc_true,
-                                        a_col_io(l_iterator).id2,
-                                        id2),
-                           in1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).in1,
-                                            gc_true),
-                                        gc_true,
-                                        a_col_io(l_iterator).in1,
-                                        in1),
-                           v1  = decode(nvl(a_tab_upd_indicator_in(l_iterator).v1,
-                                            gc_true),
-                                        gc_true,
-                                        a_col_io(l_iterator).v1,
-                                        v1)
+                       SET id1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id1, gc_true),
+                                        gc_true, a_col_io(l_iterator).id1, id1),
+                           id2 = decode(nvl(a_tab_upd_indicator_in(l_iterator).id2, gc_true),
+                                        gc_true, a_col_io(l_iterator).id2, id2),
+                           in1 = decode(nvl(a_tab_upd_indicator_in(l_iterator).in1, gc_true),
+                                        gc_true, a_col_io(l_iterator).in1, in1),
+                           v1  = decode(nvl(a_tab_upd_indicator_in(l_iterator).v1, gc_true),
+                                        gc_true, a_col_io(l_iterator).v1, v1)
                      WHERE id = a_col_io(l_iterator).id;
             ELSE
                 raise_application_error(-20001,

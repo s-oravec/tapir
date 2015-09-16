@@ -1,5 +1,15 @@
 @&&run_dir_begin
 
+rem Templating objects
+
+prompt Dropping type TAPIR_REPLACE
+drop type TAPIR_REPLACE force;
+
+prompt Dropping type TAPIR_REPLACES
+drop type TAPIR_REPLACES force;
+
+rem Table metadata objects
+
 prompt Dropping type TAPIR_COLUMN
 drop type tapir_column force;
 

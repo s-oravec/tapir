@@ -15,10 +15,10 @@ CREATE OR REPLACE PACKAGE ut_tapir AS
     PROCEDURE create_coll_type(d VARCHAR2 := 'create coll type should work');
     PROCEDURE drop_coll_type(d VARCHAR2 := 'drop coll type should work');
 
-    PROCEDURE create_package(d VARCHAR2 := 'create package should work');
+    PROCEDURE oocreate_package(d VARCHAR2 := 'create package should work');
     PROCEDURE drop_package(d VARCHAR2 := 'drop package should work');
 
-    PROCEDURE after_all;
+    PROCEDURE xxafter_all;
 
 END;
 /
@@ -202,7 +202,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     END;
 
     --------------------------------------------------------------------------------
-    PROCEDURE create_package(d VARCHAR2) IS
+    PROCEDURE oocreate_package(d VARCHAR2) IS
         l_count NUMBER;
     BEGIN
         --log
@@ -255,7 +255,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
     END;
 
     --------------------------------------------------------------------------------
-    PROCEDURE after_all IS
+    PROCEDURE xxafter_all IS
     BEGIN
         --cleanup TAPI objects
         tapir.drop_all_for_table(a_table_name_in => g_table_name);
