@@ -19,12 +19,12 @@ module.exports = function(grunt) {
         shell: {
             runSuperUserScript : {
                 command: function (script) {
-                    return '<%= sqlTool %> <%= superUserDbConnectString %> @' + script + '.sql'
+                    return '<%= sqlTool %> <%= superUserDbConnectString %> @' + script + '.sql <%= environment %>'
                 }
             },
             runTapirUserScript : {
                 command: function (script) {
-                    return '<%= sqlTool %> <%= peteUserDbConnectString %> @' + script + '.sql'
+                    return '<%= sqlTool %> <%= tapirUserDbConnectString %> @' + script + '.sql'
                 }
             }
         }
@@ -39,14 +39,19 @@ module.exports = function(grunt) {
 	    var init = require('./config/init')();
 	    var config = require('./config/config');
 
+        grunt.config.set('environment', process.env.TAPIR_ENV);
         grunt.config.set('sqlTool', config.sqlTool);
         grunt.config.set('superUserDbConnectString', config.db.superUserDbConnectString);
-        grunt.config.set('peteUserDbConnectString', config.db.peteUserDbConnectString);
+        grunt.config.set('tapirUserDbConnectString', config.db.tapirUserDbConnectString);
     });
 
     grunt.registerTask('ci', ['loadConfig', 'reinstall', 'test', 'watch']);
 
     grunt.registerTask('test', ['loadConfig', 'shell:runTapirUserScript:test']);
+
+    grunt.registerTask('create', ['loadConfig', 'shell:runSuperUserScript:create']);
+
+    grunt.registerTask('drop', ['loadConfig', 'shell:runSuperUserScript:drop']);
 
     grunt.registerTask('install', ['loadConfig', 'shell:runTapirUserScript:install']);
 

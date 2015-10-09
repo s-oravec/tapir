@@ -68,7 +68,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         --assert
@@ -90,7 +90,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         --test
@@ -114,7 +114,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         --assert
@@ -136,7 +136,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         --test
@@ -159,7 +159,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
@@ -182,7 +182,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
         tapir.create_tapi_coll_type(a_table_name_in => g_table_name);
@@ -206,7 +206,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare - create required objects
         tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);
@@ -233,7 +233,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir AS
         l_count NUMBER;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare - create
         tapir.create_surrogate_key_seq(a_table_name_in => g_table_name);
         tapir.create_tapi_object_type(a_table_name_in => g_table_name);

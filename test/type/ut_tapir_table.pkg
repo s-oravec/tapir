@@ -28,7 +28,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_table AS
     PROCEDURE get_surrogate_key_seq_name(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --assert
         pete_assert.eq(a_expected_in => 'sx_tapir_reference',
                        a_actual_in   => g_tapir_table.get_surrogate_key_seq_name());
@@ -38,7 +38,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_table AS
     PROCEDURE get_obj_type_name(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --assert
         pete_assert.eq(a_expected_in => 'tx_tapir_reference',
                        a_actual_in   => g_tapir_table.get_obj_type_name());
@@ -48,7 +48,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_table AS
     PROCEDURE get_coll_type_name(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --assert
         pete_assert.eq(a_expected_in => 'cx_tapir_reference',
                        a_actual_in   => g_tapir_table.get_coll_type_name());

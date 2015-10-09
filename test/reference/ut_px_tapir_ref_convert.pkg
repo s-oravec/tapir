@@ -144,7 +144,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_convert AS
         lobj_x tx_tapir_reference;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --
         lobj_x := px_tapir_reference.convert(a_rec_in => lrec_a);
         lrec_b := px_tapir_reference.convert(a_obj_in => lobj_x);
@@ -169,7 +169,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_convert AS
         lrec_a px_tapir_reference.typ_rec;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --
         --Uninitialized
         lcol_x := px_tapir_reference.convert(a_tab_in => ltab_a);

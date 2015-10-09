@@ -58,7 +58,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         l_pkey px_tapir_reference.typ_pkey_rec;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         g_rec.v1 := 'Hello World!';
         --test
@@ -76,7 +76,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
         l_pkey px_tapir_reference.typ_pkey_rec;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         g_obj.v1 := 'Hello World!';
         --test
@@ -93,7 +93,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
     PROCEDURE upd_tab_update_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         g_tab(1).v1 := 'Hello World!';
         g_tab(2).v1 := 'Hello Moon!';
@@ -112,7 +112,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_upd AS
     PROCEDURE upd_col_update_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prepare
         g_col(1).v1 := 'Hello World!';
         g_col(2).v1 := 'Hello Moon!';

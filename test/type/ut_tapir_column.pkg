@@ -125,7 +125,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         c tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --assert
         c := tapir_column();
         pete_assert.this(a_value_in   => c IS NOT NULL,
@@ -137,7 +137,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_decl VARCHAR2(255);
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 10, char_length => 10, char_used =>'B')
                        .get_type_decl;
@@ -152,7 +152,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_decl VARCHAR2(255);
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 10, char_length => 10, char_used =>'B')
                        .get_type_decl;
@@ -167,7 +167,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_decl VARCHAR2(255);
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'VARCHAR2', data_length => 40, char_length => 10, char_used =>'C')
                        .get_type_decl;
@@ -181,7 +181,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_integer(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => 0)
                        .get_type_decl;
@@ -195,7 +195,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_number(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => NULL)
                        .get_type_decl;
@@ -209,7 +209,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_number_precision(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => 9, data_scale => 0)
                        .get_type_decl;
@@ -223,7 +223,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_number_pcscl(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => 9, data_scale => 2)
                        .get_type_decl;
@@ -237,7 +237,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_number_scale(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'NUMBER', data_length => 22, data_precision => NULL, data_scale => 2)
                        .get_type_decl;
@@ -251,7 +251,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_date(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'DATE', data_length => 7, data_precision => NULL, data_scale => NULL)
                        .get_type_decl;
@@ -264,7 +264,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
     PROCEDURE get_type_decl_timestamp(d VARCHAR2) IS
         l_attr_decl VARCHAR2(255);
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_attr_decl := tapir_column(column_name =>'COL', data_type =>'TIMESTAMP(6)', data_length => 11, data_precision => NULL, data_scale => 6)
                        .get_type_decl;
@@ -285,7 +285,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column         tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name => 'COL',
                                          data_type   => 'VARCHAR2',
@@ -308,7 +308,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column         tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name => 'COL',
                                          data_type   => 'VARCHAR2',
@@ -331,7 +331,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column         tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name => 'COL',
                                          data_type   => 'VARCHAR2',
@@ -353,7 +353,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'NUMBER',
@@ -375,7 +375,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'NUMBER',
@@ -397,7 +397,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'NUMBER',
@@ -419,7 +419,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'NUMBER',
@@ -441,7 +441,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'NUMBER',
@@ -463,7 +463,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'DATE',
@@ -485,7 +485,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_attr_ctor_decl VARCHAR2(255);
         l_column         tapir_column;
     BEGIN
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column         := tapir_column(column_name    => 'COL',
                                          data_type      => 'TIMESTAMP(6)',
@@ -506,7 +506,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column := tapir_column(column_name => 'COL',
                                  data_type   => 'VARCHAR2',
@@ -529,7 +529,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column := tapir_column(column_name => 'COL',
                                  data_type   => 'VARCHAR2',
@@ -559,7 +559,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column := tapir_column(column_name => 'COL',
                                  data_type   => 'VARCHAR2',
@@ -589,7 +589,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column := tapir_column(column_name => 'COL',
                                  data_type   => 'VARCHAR2',
@@ -613,7 +613,7 @@ CREATE OR REPLACE PACKAGE BODY ut_tapir_column AS
         l_column tapir_column;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         l_column := tapir_column(column_name => 'COL',
                                  data_type   => 'VARCHAR2',

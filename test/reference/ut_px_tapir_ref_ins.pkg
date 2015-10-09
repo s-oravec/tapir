@@ -63,7 +63,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
     PROCEDURE ins_rec_gen_pkey_seq(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prereq
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => helper_get_count,
@@ -84,7 +84,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
     PROCEDURE ins_rec_insert_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prereq
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => helper_get_count,
@@ -102,7 +102,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
     PROCEDURE ins_obj_insert_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prereq
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => helper_get_count,
@@ -120,7 +120,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
     PROCEDURE ins_tab_insert_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prereq
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => helper_get_count,
@@ -138,7 +138,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
     PROCEDURE ins_col_insert_works(d VARCHAR2) IS
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --prereq
         pete_assert.eq(a_expected_in => 0,
                        a_actual_in   => helper_get_count,

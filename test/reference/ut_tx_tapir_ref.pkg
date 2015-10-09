@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE ut_px_tapir_ref_ins AS
+CREATE OR REPLACE PACKAGE ut_tx_tapir_ref AS
 
     description CONSTANT VARCHAR2(255) := 'Tapir Type Reference';
 
@@ -8,14 +8,14 @@ CREATE OR REPLACE PACKAGE ut_px_tapir_ref_ins AS
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
+CREATE OR REPLACE PACKAGE BODY ut_tx_tapir_ref AS
 
     --------------------------------------------------------------------------------
     PROCEDURE empty_constructor_works(d VARCHAR2) IS
         lobj tx_tapir_reference;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         --test
         EXECUTE IMMEDIATE 'select tx_tapir_reference() from dual'
             INTO lobj;
@@ -28,7 +28,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
         lobj tx_tapir_reference;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         EXECUTE IMMEDIATE 'select tx_tapir_reference(id => 1) from dual'
             INTO lobj;
         --assert
@@ -40,7 +40,7 @@ CREATE OR REPLACE PACKAGE BODY ut_px_tapir_ref_ins AS
         lobj tx_tapir_reference;
     BEGIN
         --log
-        pete_logger.log_method_description(d);
+        pete.set_method_description(d);
         EXECUTE IMMEDIATE 'select tx_tapir_reference(id => 1, id1 => 1, id2 => 1, in1 => 1, v1 => ''test'') from dual'
             INTO lobj;
         --assert

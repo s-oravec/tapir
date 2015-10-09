@@ -56,12 +56,12 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     --------------------------------------------------------------------------------
     FUNCTION get_param
     (
-        a_key_in           IN pete_configuration.key%TYPE,
-        a_default_value_in IN pete_configuration.value%TYPE DEFAULT NULL
-    ) RETURN pete_configuration.value%TYPE IS
+        a_key_in           IN tapir_configuration.key%TYPE,
+        a_default_value_in IN tapir_configuration.value%TYPE DEFAULT NULL
+    ) RETURN tapir_configuration.value%TYPE IS
     BEGIN
         FOR config IN (SELECT VALUE
-                         FROM pete_configuration c
+                         FROM tapir_configuration c
                         WHERE key = a_key_in)
         LOOP
             RETURN config.value;
@@ -74,10 +74,10 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     --------------------------------------------------------------------------------
     FUNCTION get_boolean_param
     (
-        a_key_in           IN pete_configuration.key%TYPE,
+        a_key_in           IN tapir_configuration.key%TYPE,
         a_default_value_in IN BOOLEAN
     ) RETURN BOOLEAN IS
-        l_value pete_configuration.value%TYPE;
+        l_value tapir_configuration.value%TYPE;
     BEGIN
         l_value := get_param(a_key_in);
     
@@ -97,12 +97,12 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     --------------------------------------------------------------------------------
     PROCEDURE set_param
     (
-        a_key_in   IN pete_configuration.key%TYPE,
-        a_value_in IN pete_configuration.value%TYPE
+        a_key_in   IN tapir_configuration.key%TYPE,
+        a_value_in IN tapir_configuration.value%TYPE
     ) IS
         PRAGMA AUTONOMOUS_TRANSACTION;
     BEGIN
-        MERGE INTO pete_configuration c
+        MERGE INTO tapir_configuration c
         USING (SELECT a_key_in key2, a_value_in value2 FROM dual) d
         ON (c.key = d.key2)
         WHEN MATCHED THEN
@@ -116,7 +116,7 @@ CREATE OR REPLACE PACKAGE BODY TAPIR_CONFIG AS
     --------------------------------------------------------------------------------
     PROCEDURE set_boolean_param
     (
-        a_key_in   IN pete_configuration.key%TYPE,
+        a_key_in   IN tapir_configuration.key%TYPE,
         a_value_in IN BOOLEAN
     ) IS
         l_table_value VARCHAR2(10);
