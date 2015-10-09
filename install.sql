@@ -9,9 +9,8 @@ prompt define action and script
 define g_run_action = install
 define g_run_script = install
 
-prompt use pete_010000
-define g_pete_schema=pete_010000
-@&&run_script oradb_modules/pete/use.sql
+prompt install dependencies
+@&&run_script install_dependencies
 
 prompt install application
 @&&run_dir application
